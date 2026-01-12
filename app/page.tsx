@@ -302,23 +302,25 @@ export default function Home() {
         <div className="relative z-20 w-[320px] md:w-[434px]">
           {/* Left fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] -z-10"
+            className="pointer-events-none absolute top-0 h-full w-[75px] z-10"
             style={{
-              right: "90%",
+              right: "97%",
               background:
                 "linear-gradient(to left, rgba(5,5,7,1) 0%, rgba(5,5,7,0.7) 30%, rgba(5,5,7,0.4) 60%, rgba(5,5,7,0) 100%)",
             }}
           />
           {/* Right fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] -z-10"
+            className="pointer-events-none absolute top-0 h-full w-[75px] z-10"
             style={{
-              left: "90%",
+              left: "97%",
               background:
                 "linear-gradient(to right, rgba(5,5,7,1) 0%, rgba(5,5,7,0.7) 30%, rgba(5,5,7,0.4) 60%, rgba(5,5,7,0) 100%)",
             }}
           />
-          <Iphone src="flex3.png" />
+          <div className="z-30">
+            <Iphone src="flex3.png" />
+          </div>
         </div>
       </section>
     </main>
