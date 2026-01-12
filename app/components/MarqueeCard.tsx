@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { IoPeopleSharp } from "react-icons/io5";
 
 export type MarqueeToken = {
   id: number;
@@ -9,6 +10,7 @@ export type MarqueeToken = {
   feeEarnerUsername: string; // can be "user" or "@user"
   feeEarnerAvatar: string;   // e.g. "/c1.webp"
   earningsDisplay: string;   // e.g. "$27,472"
+  holdersDisplay: string;    // e.g. "1,204"
 };
 
 type MarqueeCardProps = {
@@ -53,61 +55,79 @@ export function MarqueeCard({ token, className = "" }: MarqueeCardProps) {
         "
       />
 
-      {/* TOP: token image + symbol/name */}
-      <div className="relative flex items-center gap-4">
-        <div
-          className="
-            relative
-            h-12 w-12
-            flex items-center justify-center
-          "
-        >
-          {/* inner wrapper does the rounding + clipping */}
+      {/* TOP: left = token image + symbol/name, right = holder count */}
+      <div className="relative flex items-start justify-between gap-4">
+        {/* Left: token image + symbol/name */}
+        <div className="flex items-center gap-4 min-w-0">
           <div
             className="
-              h-full w-full rounded-2xl overflow-hidden
-              bg-[#151515]
-              border border-white/10
+              relative
+              h-12 w-12
               flex items-center justify-center
             "
           >
-            <Image
-              src={token.tokenImage}
-              alt={`${token.name} logo`}
-              width={48}
-              height={48}
-              className="h-full w-full object-cover"
-            />
+            {/* inner wrapper does the rounding + clipping */}
+            <div
+              className="
+                h-full w-full rounded-2xl overflow-hidden
+                bg-[#151515]
+                border border-white/10
+                flex items-center justify-center
+              "
+            >
+              <Image
+                src={token.tokenImage}
+                alt={`${token.name} logo`}
+                width={48}
+                height={48}
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* Verified badge bottom-right */}
+            <div
+              className="
+                absolute -bottom-1 -right-1
+                h-4 w-4
+                rounded-full
+                border border-[#050506]
+                bg-[#050506]
+                overflow-hidden
+              "
+            >
+              <Image
+                src="/ver.webp"
+                alt="Verified badge"
+                width={16}
+                height={16}
+                className="h-full w-full object-contain"
+              />
+            </div>
           </div>
 
-          {/* Verified badge bottom-right, allowed to overflow outer box */}
-          <div
-            className="
-              absolute -bottom-1 -right-1
-              h-4 w-4
-              rounded-full
-              border border-[#050506]
-              bg-[#050506]
-              overflow-hidden
-            "
-          >
-            <Image
-              src="/ver.webp"
-              alt="Verified badge"
-              width={16}
-              height={16}
-              className="h-full w-full object-contain"
-            />
+          <div className="flex flex-col text-left min-w-0">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-neutral-300">
+              {token.symbol}
+            </span>
+            <p className="mt-0.5 text-[18px] font-semibold text-white truncate max-w-[190px]">
+              {token.name}
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-col text-left min-w-0">
-          <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-neutral-300">
-            {token.symbol}
-          </span>
-          <p className="mt-0.5 text-[18px] font-semibold text-white truncate max-w-[190px]">
-            {token.name}
-          </p>
+        {/* Right: holders pill */}
+        <div
+          className="
+            inline-flex items-center gap-1.5
+            rounded-full border border-white/12
+            bg-black/70
+            px-2.5 py-1
+            text-[11px] text-neutral-200
+            shrink-0
+          "
+        >
+          <IoPeopleSharp className="text-[14px]" />
+          <span className="tabular-nums">{token.holdersDisplay}</span>
         </div>
       </div>
 
