@@ -289,7 +289,7 @@ export default function Home() {
         </p>
 
         {/* Full-width marquee behind iPhone (react-fast-marquee) */}
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 z-0 overflow-hidden blur-[0.5px] invisible md:visible">
+        <div className="pointer-events-none absolute inset-x-0 top-2/5 -translate-y-1/2 z-0 overflow-hidden blur-[0.5px] invisible md:visible">
           <Marquee gradient={false} speed={40} pauseOnHover={false}>
             {Array.from({ length: 3 }).flatMap((_, loopIndex) =>
               MARQUEE_TOKENS.map((token) => (
