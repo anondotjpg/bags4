@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { motion, type MotionProps } from "motion/react";
 import { DottedMap } from "./components/DottedMap";
+import { Iphone } from "./components/Iphone";
 
 const shinyAnimationProps: MotionProps = {
   initial: { "--x": "100%" },
@@ -171,10 +172,7 @@ export default function Home() {
             transform-gpu translate-y-10
           "
         >
-          <DottedMap
-            className="w-full h-full"
-            dotRadius={0.15}
-          />
+          <DottedMap className="w-full h-full" dotRadius={0.15} />
         </div>
 
         <div className="max-w-3xl text-center z-10">
@@ -231,6 +229,16 @@ export default function Home() {
             <FiPlus className="relative mr-2 text-3xl" />
             <span className="relative font-bold">get funded</span>
           </motion.button>
+        </div>
+      </section>
+
+      {/* iPhone mockup under hero */}
+      <section className="flex flex-col items-center px-6 pb-16">
+        <p className="mb-4 text-xs tracking-wider text-neutral-700">
+          you are clicks away from this
+        </p>
+        <div className="w-[320px] md:w-108.5">
+          <Iphone src="flex3.png" />
         </div>
       </section>
     </main>
