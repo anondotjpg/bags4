@@ -42,7 +42,7 @@ function RotatingWord() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length);
-    }, 1500); // change word every 1.5s
+    }, 2200); // change word every 1.5s
 
     return () => clearInterval(interval);
   }, []);
