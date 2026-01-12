@@ -422,8 +422,6 @@ export default function Home() {
                 px-7 py-2.5
                 text-sm font-semibold text-black
                 shadow-[0_0_25px_rgba(0,255,90,0.1)]
-                transform transition-transform duration-150
-                hover:scale-[1.02]
               "
             >
               download now
