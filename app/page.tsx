@@ -379,10 +379,10 @@ export default function Home() {
           <div
             className="
               relative
-              mx-auto flex flex-col items-center justify-between gap-6
+              mx-auto flex flex-col items-center justify-between gap-2
               rounded-[28px] border border-white/5
               bg-[#0c0c0f]
-              px-6 py-8
+              px-6 py-4
               md:flex-row md:items-start md:gap-10 md:px-10 md:py-7 md:pb-8
             "
           >
@@ -443,14 +443,14 @@ export default function Home() {
             <a
               href="https://bags.fm/app-links"
               className="
-                mt-3 inline-flex shrink-0 items-center justify-center
+                mt-1 inline-flex shrink-0 items-center justify-center
                 rounded-full bg-[#02FF40]/100
                 hover:bg-[#02FF40]/90
                 px-7 py-2.5
                 text-sm font-semibold text-black
                 shadow-[0_0_25px_rgba(0,255,90,0.1)]
                 transition-colors duration-150
-                md:absolute md:bottom-5 md:left-6 md:mt-0
+                lg:absolute lg:bottom-5 lg:left-6 lg:mt-0
               "
             >
               download now
