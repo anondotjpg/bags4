@@ -294,7 +294,7 @@ export default function Home() {
           className="
             pointer-events-none
             absolute inset-x-0 bottom-0
-            z-0
+            z-25
             h-56 md:h-100
           "
         >
@@ -307,7 +307,7 @@ export default function Home() {
           {/* dark overlay */}
           <div className="absolute inset-0 bg-[#050507]/75" />
           {/* fade toward top */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050507] via-[#050507]/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#050507] via-[#050507]/60 to-transparent" />
         </div>
 
         <p className="mb-4 text-xs tracking-wider text-neutral-700 z-20">
@@ -333,7 +333,7 @@ export default function Home() {
         <div className="relative z-30 w-[320px] md:w-[434px]">
           {/* Left fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] z-20"
+            className="pointer-events-none absolute top-0 h-[70%] w-[75px] z-20"
             style={{
               right: "97%",
               background:
@@ -342,7 +342,7 @@ export default function Home() {
           />
           {/* Right fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] z-20"
+            className="pointer-events-none absolute top-0 h-[70%] w-[75px] z-20"
             style={{
               left: "97%",
               background:
