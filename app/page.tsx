@@ -8,6 +8,7 @@ import Marquee from "react-fast-marquee";
 import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
 import { MarqueeCard, MarqueeToken } from "./components/MarqueeCard";
+import { AvatarCircles } from "./components/Avatar";
 
 const shinyAnimationProps: MotionProps = {
   initial: { "--x": "100%" },
@@ -87,7 +88,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     name: "Natecoin",
     symbol: "NATE",
     tokenImage: "/t4.webp",
-    feeEarnerUsername: "NATE_Esparza",
+    feeEarnerUsername: "Nate_Esparza",
     feeEarnerAvatar: "/c4.webp",
     earningsDisplay: "$18,309",
     holdersDisplay: "430",
@@ -103,6 +104,12 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     holdersDisplay: "768",
   },
 ];
+
+// 🔹 Build avatar data for AvatarCircles using fee earner avatars + Twitter links
+const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
+  imageUrl: token.feeEarnerAvatar,
+  profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
+}));
 
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
@@ -251,17 +258,29 @@ export default function Home() {
         </div>
 
         <div className="max-w-3xl text-center z-10 -mt-16">
-          {/* Earnings pill */}
-          <div className="inline-flex items-center rounded-full bg-[rgba(0,0,0,0.9)] border border-white/10 px-5 py-2 mb-5 shadow-lg backdrop-blur-sm">
-            <span
-              ref={earningsSpanRef}
-              className="text-sm font-semibold text-white tracking-[0.02em]"
-            >
-              ${EARNINGS_START.toLocaleString("en-US")}+
-            </span>
-            <span className="ml-1 text-sm text-neutral-300">
-              in creator earnings
-            </span>
+          {/* Earnings pill + avatars wrapper */}
+          <div className="relative inline-flex items-center">
+            {/* Earnings pill */}
+            <div className="inline-flex items-center rounded-full bg-[rgba(0,0,0,0.9)] border border-white/10 px-5 py-3 mb-5 shadow-lg backdrop-blur-sm">
+              <span
+                ref={earningsSpanRef}
+                className="text-sm font-semibold text-white tracking-[0.02em]"
+              >
+                ${EARNINGS_START.toLocaleString("en-US")}+
+              </span>
+              <span className="ml-1 text-sm text-neutral-300">
+                in creator earnings
+              </span>
+            </div>
+
+            {/* Avatar circles – top-right of pill, md+ only */}
+            <div className="pointer-events-auto absolute -right-5 -top-6 hidden md:block">
+              <AvatarCircles
+                numPeople={MARQUEE_TOKENS.length}
+                avatarUrls={AVATAR_URLS}
+                className="scale-75"
+              />
+            </div>
           </div>
 
           {/* Hero text */}
