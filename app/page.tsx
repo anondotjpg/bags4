@@ -42,7 +42,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     feeEarnerUsername: "GeoffreyHuntley",
     feeEarnerAvatar: "/c1.webp",
     earningsDisplay: "$105,097.26",
-    holdersDisplay: "2,542"
+    holdersDisplay: "2,542",
   },
   {
     id: 2,
@@ -52,7 +52,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     feeEarnerUsername: "thekaranchawla",
     feeEarnerAvatar: "/c2.webp",
     earningsDisplay: "$28,952",
-    holdersDisplay: "775"
+    holdersDisplay: "775",
   },
   {
     id: 3,
@@ -62,7 +62,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     feeEarnerUsername: "PRguitarman",
     feeEarnerAvatar: "/c3.webp",
     earningsDisplay: "$400,308",
-    holdersDisplay: "3,579"
+    holdersDisplay: "3,579",
   },
   {
     id: 4,
@@ -72,7 +72,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     feeEarnerUsername: "Nate_Esparza",
     feeEarnerAvatar: "/c4.webp",
     earningsDisplay: "$18,309",
-    holdersDisplay: "430"
+    holdersDisplay: "430",
   },
   {
     id: 5,
@@ -82,7 +82,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     feeEarnerUsername: "Claude_Memory",
     feeEarnerAvatar: "/c5.webp",
     earningsDisplay: "$21,058",
-    holdersDisplay: "768"
+    holdersDisplay: "768",
   },
 ];
 
@@ -289,12 +289,33 @@ export default function Home() {
 
       {/* iPhone mockup under hero */}
       <section className="relative flex flex-col items-center px-6 pb-16 overflow-hidden -mt-16">
-        <p className="mb-4 text-xs tracking-wider text-neutral-700">
+        {/* floor.webp background behind marquee + iPhone (full width) */}
+        <div
+          className="
+            pointer-events-none
+            absolute inset-x-0 bottom-0
+            z-0
+            h-56 md:h-100
+          "
+        >
+          <Image
+            src="/floor.webp"
+            alt=""
+            fill
+            className="object-cover grayscale"
+          />
+          {/* dark overlay */}
+          <div className="absolute inset-0 bg-[#050507]/75" />
+          {/* fade toward top */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050507] via-[#050507]/60 to-transparent" />
+        </div>
+
+        <p className="mb-4 text-xs tracking-wider text-neutral-700 z-20">
           you are clicks away from this
         </p>
 
         {/* Full-width marquee behind iPhone (react-fast-marquee) */}
-        <div className="pointer-events-none absolute inset-x-0 top-2/5 -translate-y-1/2 z-0 overflow-hidden blur-[0.5px] invisible md:visible">
+        <div className="pointer-events-none absolute inset-x-0 top-2/5 -translate-y-1/2 z-10 overflow-hidden blur-[0.5px] invisible md:visible">
           <Marquee gradient={false} speed={40} pauseOnHover={false}>
             {Array.from({ length: 3 }).flatMap((_, loopIndex) =>
               MARQUEE_TOKENS.map((token) => (
@@ -309,10 +330,10 @@ export default function Home() {
         </div>
 
         {/* iPhone on top, centered - with fade elements behind */}
-        <div className="relative z-20 w-[320px] md:w-[434px]">
+        <div className="relative z-30 w-[320px] md:w-[434px]">
           {/* Left fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] z-10"
+            className="pointer-events-none absolute top-0 h-full w-[75px] z-20"
             style={{
               right: "97%",
               background:
@@ -321,7 +342,7 @@ export default function Home() {
           />
           {/* Right fade gradient */}
           <div
-            className="pointer-events-none absolute top-0 h-full w-[75px] z-10"
+            className="pointer-events-none absolute top-0 h-full w-[75px] z-20"
             style={{
               left: "97%",
               background:
