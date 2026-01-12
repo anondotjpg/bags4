@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { motion, type MotionProps } from "motion/react";
@@ -31,6 +31,9 @@ const shinyAnimationProps: MotionProps = {
 } as MotionProps;
 
 const EARNINGS_START = 21_000_000;
+
+// words to loop through where {variable} was
+const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 
 // 🔹 Marquee token JSON you can customize
 const MARQUEE_TOKENS: MarqueeToken[] = [
@@ -90,6 +93,8 @@ export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
   const earningsValueRef = useRef<number>(EARNINGS_START);
 
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+
   // Update earnings without causing React re-renders
   useEffect(() => {
     const node = earningsSpanRef.current;
@@ -105,6 +110,17 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Rotate the {variable} word
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % VARIABLE_WORDS.length);
+    }, 1500); // change word every 1.5s
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentWord = VARIABLE_WORDS[currentWordIndex];
 
   return (
     <main className="min-h-screen bg-[#050507] text-white">
@@ -352,6 +368,64 @@ export default function Home() {
           />
           <div className="z-30">
             <Iphone src="flex3.png" />
+          </div>
+        </div>
+
+        {/* Bags Mobile banner */}
+        <div className="relative z-30 mt-10 w-full max-w-5xl">
+          <div
+            className="
+              mx-auto flex flex-col items-center justify-between gap-4
+              rounded-[28px] border border-white/5
+              bg-[#0c0c0f]
+              px-6 py-8
+              md:flex-row md:px-8 md:py-5
+            "
+          >
+            <div className="flex items-center gap-4">
+              {/* Icon background box since b.png is transparent */}
+              <div
+                className="
+                  flex h-14 w-14 items-center justify-center
+                  rounded-2xl bg-black/90
+                "
+              >
+                <Image
+                  src="/b.png"
+                  alt="Bags Mobile icon"
+                  width={40}
+                  height={40}
+                  className="h-9 w-9"
+                />
+              </div>
+
+              <div className="text-left">
+                <p className="text-sm font-semibold text-white md:text-base">
+                  Bags Mobile
+                </p>
+                <p className="text-xs text-neutral-300 md:text-sm">
+                  Get funded for your {currentWord}
+                </p>
+                <p className="mt-0.5 text-[11px] text-neutral-500 md:text-xs">
+                  Available on iOS and Android
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="#"
+              className="
+                inline-flex shrink-0 items-center justify-center
+                rounded-full bg-[#02FF40]
+                px-7 py-2.5
+                text-sm font-semibold text-black
+                shadow-[0_0_25px_rgba(0,255,90,0.1)]
+                transform transition-transform duration-150
+                hover:scale-[1.02]
+              "
+            >
+              download now
+            </a>
           </div>
         </div>
       </section>
