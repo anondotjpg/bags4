@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { motion, type MotionProps } from "motion/react";
+import Marquee from "react-fast-marquee";
 import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
 
@@ -238,29 +239,20 @@ export default function Home() {
           you are clicks away from this
         </p>
 
-        {/* Full-width marquee behind iPhone */}
+        {/* Full-width marquee behind iPhone (react-fast-marquee) */}
         <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 z-0 overflow-hidden blur-[0.5px]">
-          <motion.div
-            className="flex"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 18,
-              ease: "linear",
-            }}
+          <Marquee
+            gradient={false}
+            speed={40}
+            pauseOnHover={false}
           >
-            {[0, 1].map((copyIndex) => (
-              <div key={copyIndex} className="flex">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div
-                    key={`${copyIndex}-${i}`}
-                    className="h-60 w-80 flex-shrink-0 rounded-2xl bg-[#141414] border border-white/10 mr-4"
-                  />
-                ))}
-              </div>
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-60 w-80 flex-shrink-0 rounded-2xl bg-[#141414] border border-white/10 mr-4"
+              />
             ))}
-          </motion.div>
+          </Marquee>
         </div>
 
         {/* iPhone on top, centered - with fade elements behind */}
