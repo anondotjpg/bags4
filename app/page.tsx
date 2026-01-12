@@ -413,7 +413,7 @@ export default function Home() {
             </div>
 
             <a
-              href="#"
+              href="https://bags.fm/app-links"
               className="
                 inline-flex shrink-0 items-center justify-center
                 rounded-full bg-[#02FF40]
