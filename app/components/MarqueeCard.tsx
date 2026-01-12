@@ -5,9 +5,10 @@ export type MarqueeToken = {
   id: number;
   name: string;
   symbol: string;
-  tokenImage: string;       // e.g. "/t1.webp"
-  feeEarnerUsername: string;
-  feeEarnerAvatar: string;  // e.g. "/c1.webp"
+  tokenImage: string;        // e.g. "/t1.webp"
+  feeEarnerUsername: string; // can be "user" or "@user"
+  feeEarnerAvatar: string;   // e.g. "/c1.webp"
+  earningsDisplay: string;   // e.g. "$27,472"
 };
 
 type MarqueeCardProps = {
@@ -15,12 +16,25 @@ type MarqueeCardProps = {
   className?: string;
 };
 
+const MAX_USERNAME_CHARS = 10;
+
 export function MarqueeCard({ token, className = "" }: MarqueeCardProps) {
+  // build X profile URL, strip leading @ if present
+  const handle = token.feeEarnerUsername.replace(/^@/, "");
+  const profileUrl = `https://x.com/${handle}`;
+
+  // display username with character limit (does not affect link)
+  let displayUsername = token.feeEarnerUsername;
+  if (displayUsername.length > MAX_USERNAME_CHARS) {
+    displayUsername =
+      displayUsername.slice(0, MAX_USERNAME_CHARS - 1) + "…";
+  }
+
   return (
     <div
       className={`
         relative
-        h-60 w-80 flex-shrink-0
+        h-60 w-90 flex-shrink-0
         rounded-2xl
         bg-[#050506]
         border border-white/10
@@ -43,23 +57,51 @@ export function MarqueeCard({ token, className = "" }: MarqueeCardProps) {
       <div className="relative flex items-center gap-4">
         <div
           className="
-            h-12 w-12 rounded-2xl overflow-hidden
-            bg-[#151515]
-            border border-white/10
+            relative
+            h-12 w-12
             flex items-center justify-center
           "
         >
-          <Image
-            src={token.tokenImage}
-            alt={`${token.name} logo`}
-            width={48}
-            height={48}
-            className="h-full w-full object-cover"
-          />
+          {/* inner wrapper does the rounding + clipping */}
+          <div
+            className="
+              h-full w-full rounded-2xl overflow-hidden
+              bg-[#151515]
+              border border-white/10
+              flex items-center justify-center
+            "
+          >
+            <Image
+              src={token.tokenImage}
+              alt={`${token.name} logo`}
+              width={48}
+              height={48}
+              className="h-full w-full object-cover"
+            />
+          </div>
+
+          {/* Verified badge bottom-right, allowed to overflow outer box */}
+          <div
+            className="
+              absolute -bottom-1 -right-1
+              h-4 w-4
+              rounded-full
+              border border-[#050506]
+              bg-[#050506]
+              overflow-hidden
+            "
+          >
+            <Image
+              src="/ver.webp"
+              alt="Verified badge"
+              width={16}
+              height={16}
+              className="h-full w-full object-contain"
+            />
+          </div>
         </div>
 
         <div className="flex flex-col text-left min-w-0">
-          {/* symbol over name, bigger */}
           <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-neutral-300">
             {token.symbol}
           </span>
@@ -69,13 +111,30 @@ export function MarqueeCard({ token, className = "" }: MarqueeCardProps) {
         </div>
       </div>
 
-      {/* BOTTOM: earner + X pill */}
-      <div className="relative mt-5 flex items-end justify-between">
+      {/* BOTTOM: left = X user pill, right = earnings */}
+      <div className="relative mt-5 flex items-end justify-between gap-3">
+        {/* Earner pill */}
         <div className="flex flex-col">
-          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 mb-1">
             earner
           </span>
-          <div className="mt-1.5 flex items-center gap-2.5">
+
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="
+              inline-flex items-center gap-2.5
+              rounded-full border border-white/12
+              bg-black/75
+              px-3.5 py-1.75
+              text-sm text-neutral-200
+              no-underline
+              hover:border-white/40
+              hover:bg-black/90
+              transition
+            "
+          >
             <div className="h-8 w-8 rounded-full overflow-hidden border border-white/15 bg-[#111111]">
               <Image
                 src={token.feeEarnerAvatar}
@@ -85,25 +144,23 @@ export function MarqueeCard({ token, className = "" }: MarqueeCardProps) {
                 className="h-full w-full object-cover"
               />
             </div>
-            <span className="text-sm text-neutral-200 truncate max-w-[140px]">
-              {token.feeEarnerUsername}
+
+            <span className="truncate max-w-[100px]">
+              {displayUsername}
             </span>
-          </div>
+
+            <span className="text-[17px] leading-none ml-1">𝕏</span>
+          </a>
         </div>
 
-        <div
-          className="
-            flex items-center gap-2
-            rounded-full border border-white/10
-            bg-black/80
-            px-3 py-1.5
-            text-[11px] text-neutral-300
-          "
-        >
-          <span className="text-[15px] leading-none">𝕏</span>
-          <span className="uppercase tracking-[0.18em]">
-            view
+        {/* Earnings bottom-right */}
+        <div className="text-right">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 block">
+            earned
           </span>
+          <p className="mt-1 text-[20px] font-semibold text-white leading-none">
+            {token.earningsDisplay}
+          </p>
         </div>
       </div>
     </div>

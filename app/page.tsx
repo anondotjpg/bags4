@@ -41,6 +41,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     tokenImage: "/t1.webp",
     feeEarnerUsername: "GeoffreyHuntley",
     feeEarnerAvatar: "/c1.webp",
+    earningsDisplay: "$105,097.26"
   },
   {
     id: 2,
@@ -49,6 +50,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     tokenImage: "/z.webp",
     feeEarnerUsername: "thekaranchawla",
     feeEarnerAvatar: "/c2.webp",
+    earningsDisplay: "$28,952"
   },
   {
     id: 3,
@@ -57,6 +59,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     tokenImage: "/t3.webp",
     feeEarnerUsername: "PRguitarman",
     feeEarnerAvatar: "/c3.webp",
+    earningsDisplay: "$400,308"
   },
   {
     id: 4,
@@ -65,6 +68,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     tokenImage: "/t4.webp",
     feeEarnerUsername: "Nate_Esparza",
     feeEarnerAvatar: "/c4.webp",
+    earningsDisplay: "$18,309"
   },
   {
     id: 5,
@@ -73,6 +77,7 @@ const MARQUEE_TOKENS: MarqueeToken[] = [
     tokenImage: "/t5.webp",
     feeEarnerUsername: "Claude_Memory",
     feeEarnerAvatar: "/c5.webp",
+    earningsDisplay: "$21,058"
   },
 ];
 
