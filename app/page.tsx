@@ -224,6 +224,8 @@ export default function Home() {
                 text-sm text-black
                 transform will-change-transform
                 transition-transform duration-150 ease-in-out
+                transition-colors
+                hover:bg-neutral-100
                 font-bold
                 cursor-pointer
               "
@@ -422,6 +424,8 @@ export default function Home() {
                 px-7 py-2.5
                 text-sm font-semibold text-black
                 shadow-[0_0_25px_rgba(0,255,90,0.1)]
+                transition-colors
+                hover:bg-[#39ff6b]
               "
             >
               download now
