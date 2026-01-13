@@ -34,7 +34,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #050507;
   --foreground: #171717;
 
   /* Use OpenRunde as primary UI font */
@@ -53,8 +53,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #050507;
+    --foreground: #050507;
   }
 }
 
@@ -67,4 +67,26 @@ body {
 /* Optional utility if you want to force OpenRunde somewhere */
 .font-open {
   font-family: var(--font-open-runde);
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
 }

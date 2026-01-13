@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { motion, type MotionProps } from "motion/react";
-import Marquee from "react-fast-marquee";
+import FastMarquee from "react-fast-marquee";
 import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
 import { MarqueeCard, MarqueeToken } from "./components/MarqueeCard";
 import { AvatarCircles } from "./components/Avatar";
+import { cn } from "@/lib/utils";
+import { Marqueee } from "./components/Marq";
 
 const shinyAnimationProps: MotionProps = {
   initial: { "--x": "100%" },
@@ -110,6 +112,108 @@ const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
   imageUrl: token.feeEarnerAvatar,
   profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
 }));
+
+// 🔹 MagicUI-style 3D Marquee data
+const reviews = [
+  {
+    name: "Jukez",
+    username: "@jukezpilled",
+    body: "I've never seen anything like this before. It's amazing. I love it.",
+    img: "jukez.jpg",
+  },
+  {
+    name: "Elon",
+    username: "@elonmusk",
+    body: "Bags is the best way to raise money online. period.",
+    img: "elon.jpg",
+  },
+  {
+    name: "Finn",
+    username: "@finnbags",
+    body: "Were funding the future. We're also about to give cracked @jukezpilled a job.",
+    img: "finn.jpg",
+  },
+];
+
+const firstRow = reviews;
+const secondRow = reviews;
+const thirdRow = reviews;
+const fourthRow = reviews;
+
+const ReviewCard = ({
+  img,
+  name,
+  username,
+  body,
+}: {
+  img: string;
+  name: string;
+  username: string;
+  body: string;
+}) => {
+  return (
+    <figure
+      className={cn(
+        "relative h-full w-fit cursor-pointer overflow-hidden rounded-xl border p-4 sm:w-36",
+        // light styles
+        "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
+        // dark styles
+        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
+      )}
+    >
+      <div className="flex flex-row items-center gap-2">
+        <img className="rounded-full" width="32" height="32" alt="" src={img} />
+        <div className="flex flex-col">
+          <figcaption className="text-sm font-medium dark:text-white">
+            {name}
+          </figcaption>
+          <p className="text-xs font-medium dark:text-white/40">{username}</p>
+        </div>
+      </div>
+      <blockquote className="mt-2 text-sm">{body}</blockquote>
+    </figure>
+  );
+};
+
+export function Marquee3D() {
+  return (
+    <div className="relative flex h-96 w-full flex-row items-center justify-center gap-4 overflow-hidden [perspective:300px] md:my-32">
+      <div
+        className="flex flex-row items-center gap-4"
+        style={{
+          transform:
+            "translateX(-100px) translateY(0px) translateZ(-100px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)",
+        }}
+      >
+        <Marqueee pauseOnHover vertical className="[--duration:20s]">
+          {firstRow.map((review) => (
+            <ReviewCard key={review.username} {...review} />
+          ))}
+        </Marqueee>
+        <Marqueee reverse pauseOnHover className="[--duration:20s]" vertical>
+          {secondRow.map((review) => (
+            <ReviewCard key={review.username} {...review} />
+          ))}
+        </Marqueee>
+        <Marqueee reverse pauseOnHover className="[--duration:20s]" vertical>
+          {thirdRow.map((review) => (
+            <ReviewCard key={review.username} {...review} />
+          ))}
+        </Marqueee>
+        <Marqueee pauseOnHover className="[--duration:20s]" vertical>
+          {fourthRow.map((review) => (
+            <ReviewCard key={review.username} {...review} />
+          ))}
+        </Marqueee>
+      </div>
+
+      <div className="from-background pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#050507]"></div>
+      <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#050507]"></div>
+      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-[#050507]"></div>
+      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-[#050507]"></div>
+    </div>
+  );
+}
 
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
@@ -355,7 +459,7 @@ export default function Home() {
 
         {/* Full-width marquee behind iPhone (react-fast-marquee) */}
         <div className="pointer-events-none absolute inset-x-0 top-2/5 -translate-y-1/2 z-10 overflow-hidden blur-[0.5px] invisible md:visible">
-          <Marquee gradient={false} speed={40} pauseOnHover={false}>
+          <FastMarquee gradient={false} speed={40} pauseOnHover={false}>
             {Array.from({ length: 3 }).flatMap((_, loopIndex) =>
               MARQUEE_TOKENS.map((token) => (
                 <MarqueeCard
@@ -365,7 +469,7 @@ export default function Home() {
                 />
               ))
             )}
-          </Marquee>
+          </FastMarquee>
         </div>
 
         {/* iPhone on top, centered - with fade elements behind */}
@@ -391,6 +495,11 @@ export default function Home() {
           <div className="z-30">
             <Iphone src="flex3.png" />
           </div>
+        </div>
+
+        {/* 🔹 MagicUI 3D Marquee between iPhone and Bags Mobile */}
+        <div className="relative z-30 mt-10 mb-5 w-full max-w-5xl hidden lg:block">
+          <Marquee3D />
         </div>
 
         {/* Bags Mobile banner */}
