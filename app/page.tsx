@@ -113,7 +113,7 @@ const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
   profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
 }));
 
-// 🔹 MagicUI-style 3D Marquee data
+// 🔹 MagicUI-style vertical Marquee data
 const reviews = [
   {
     name: "Jukez",
@@ -130,15 +130,10 @@ const reviews = [
   {
     name: "Finn",
     username: "@finnbags",
-    body: "Were funding the future. We're also about to give cracked @jukezpilled a job.",
+    body: "We’re funding the future. We're also about to give cracked @jukezpilled a job.",
     img: "finn.jpg",
   },
 ];
-
-const firstRow = reviews;
-const secondRow = reviews;
-const thirdRow = reviews;
-const fourthRow = reviews;
 
 const ReviewCard = ({
   img,
@@ -175,42 +170,51 @@ const ReviewCard = ({
   );
 };
 
+// 🔹 Vertical 4-column marquee (no 3D)
 export function Marquee3D() {
   return (
-    <div className="relative flex h-96 w-full flex-row items-center justify-center gap-4 overflow-hidden [perspective:300px] md:my-32">
-      <div
-        className="flex flex-row items-center gap-4"
-        style={{
-          transform:
-            "translateX(-100px) translateY(0px) translateZ(-100px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)",
-        }}
-      >
-        <Marqueee pauseOnHover vertical className="[--duration:20s]">
-          {firstRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marqueee>
-        <Marqueee reverse pauseOnHover className="[--duration:20s]" vertical>
-          {secondRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marqueee>
-        <Marqueee reverse pauseOnHover className="[--duration:20s]" vertical>
-          {thirdRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marqueee>
-        <Marqueee pauseOnHover className="[--duration:20s]" vertical>
-          {fourthRow.map((review) => (
-            <ReviewCard key={review.username} {...review} />
-          ))}
-        </Marqueee>
-      </div>
+    <div className="relative flex h-96 w-[75%] flex-row items-center justify-center gap-4 overflow-hidden md:my-32">
+      {/* Column 1 */}
+      <Marqueee pauseOnHover vertical className="w-1/4 [--duration:20s]">
+        {reviews.map((review) => (
+          <ReviewCard key={`col1-${review.username}`} {...review} />
+        ))}
+      </Marqueee>
 
-      <div className="from-background pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#050507]"></div>
-      <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#050507]"></div>
-      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-[#050507]"></div>
-      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-[#050507]"></div>
+      {/* Column 2 (reverse) */}
+      <Marqueee
+        reverse
+        pauseOnHover
+        vertical
+        className="w-1/4 [--duration:22s]"
+      >
+        {reviews.map((review) => (
+          <ReviewCard key={`col2-${review.username}`} {...review} />
+        ))}
+      </Marqueee>
+
+      {/* Column 3 (reverse) */}
+      <Marqueee
+        reverse
+        pauseOnHover
+        vertical
+        className="w-1/4 [--duration:18s]"
+      >
+        {reviews.map((review) => (
+          <ReviewCard key={`col3-${review.username}`} {...review} />
+        ))}
+      </Marqueee>
+
+      {/* Column 4 */}
+      <Marqueee pauseOnHover vertical className="w-1/4 [--duration:24s]">
+        {reviews.map((review) => (
+          <ReviewCard key={`col4-${review.username}`} {...review} />
+        ))}
+      </Marqueee>
+
+      {/* Top / bottom fades – matched to #050507 bg */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#050507] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#050507] to-transparent" />
     </div>
   );
 }
@@ -497,8 +501,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 🔹 MagicUI 3D Marquee between iPhone and Bags Mobile */}
-        <div className="relative z-30 mt-10 mb-5 w-full max-w-5xl hidden lg:block">
+        {/* 🔹 Vertical 4-column Marquee between iPhone and Bags Mobile */}
+        <div className="relative z-30 mt-10 mb-5 w-full max-w-5xl hidden lg:flex justify-center">
           <Marquee3D />
         </div>
 
