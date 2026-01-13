@@ -10,6 +10,7 @@ import {
   IconBrandStocktwits,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
+import { NumberTicker } from "./NumTick";
 
 /* ---------- Generic skeleton for non-chat cards (fallback) ---------- */
 
@@ -22,6 +23,8 @@ const BentoSkeleton = () => (
    ========================================================= */
 
 const LaunchSkeleton = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const first = {
     initial: { x: 20, rotate: -5 },
     hover: { x: 0, rotate: 0 },
@@ -42,10 +45,57 @@ const LaunchSkeleton = () => {
       initial="initial"
       animate="animate"
       whileHover="hover"
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
       className="flex h-full w-full flex-1 min-h-[6rem] flex-row space-x-2 rounded-xl bg-dot-black/[0.25] p-2 dark:bg-dot-white/[0.15]"
     >
       {/* Card 1 – you post the idea */}
-      <motion.div variants={first} className={baseCard}>
+      <motion.div variants={first} className={`${baseCard} relative`}>
+        {/* Green % tickers in corners */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-4 left-7 flex items-center"
+        >
+          <span className="text-[11px] font-semibold text-[#02FF40]">+</span>
+          {isHovered && <NumberTicker value={124} startValue={0} direction="up" delay={0} decimalPlaces={0} className="text-[11px] font-semibold text-[#02FF40]" />}
+          <span className="text-[11px] font-semibold text-[#02FF40]">%</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: 0.05 }}
+          className="absolute top-5 right-5 flex items-center"
+        >
+          <span className="text-[11px] font-semibold text-[#02FF40]">+</span>
+          {isHovered && <NumberTicker value={89} startValue={0} direction="up" delay={0.05} decimalPlaces={0} className="text-[11px] font-semibold text-[#02FF40]" />}
+          <span className="text-[11px] font-semibold text-[#02FF40]">%</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className="absolute bottom-4 left-7 flex items-center"
+        >
+          <span className="text-[11px] font-semibold text-[#02FF40]">+</span>
+          {isHovered && <NumberTicker value={247} startValue={0} direction="up" delay={0.1} decimalPlaces={0} className="text-[11px] font-semibold text-[#02FF40]" />}
+          <span className="text-[11px] font-semibold text-[#02FF40]">%</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: 0.15 }}
+          className="absolute bottom-4 right-5 flex items-center"
+        >
+          <span className="text-[11px] font-semibold text-[#02FF40]">+</span>
+          {isHovered && <NumberTicker value={56} startValue={0} direction="up" delay={0.15} decimalPlaces={0} className="text-[11px] font-semibold text-[#02FF40]" />}
+          <span className="text-[11px] font-semibold text-[#02FF40]">%</span>
+        </motion.div>
+
         <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/12 bg-neutral-900">
           <Image
             src="/build.png"
@@ -399,7 +449,7 @@ const BENTO_ITEMS = [
     title: "Launch on Bags",
     description:
       "Raise money and build community for whatever you're working on.",
-    header: <LaunchSkeleton />, // ← sentiment-analysis style content
+    header: <LaunchSkeleton />,
     className: "md:col-span-2",
     icon: <IconUpload className="h-4 w-4 text-neutral-400" />,
   },
