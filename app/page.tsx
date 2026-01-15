@@ -16,6 +16,9 @@ import { MagicCard } from "./components/MagicCard";
 import DitherShader from "./components/dither-shader";
 import { BagsBento } from "./components/BagsBento";
 
+// ElevenLabs Matrix + presets
+import { Matrix, digits, wave } from "./components/Matrix";
+
 const shinyAnimationProps: MotionProps = {
   initial: { "--x": "100%" },
   animate: { "--x": "-100%" },
@@ -39,6 +42,10 @@ const shinyAnimationProps: MotionProps = {
 
 const EARNINGS_START = 21_000_000;
 const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
+
+// 🔢 Daily flex number (only shown via Matrix digits)
+const FUNDED_TODAY = 1284;
+const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
 function RotatingWord() {
   const [index, setIndex] = useState(0);
@@ -272,7 +279,7 @@ export default function Home() {
             </a>
             <a
               href="https://bags.fm/login"
-              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg:white/90 hover:bg-white/90"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full bg:white/100 bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg:white/90 hover:bg-white/90"
             >
               <span>log in</span>
             </a>
@@ -337,7 +344,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* iPhone + floor + marquee + bento + mobile card */}
+      {/* iPhone + floor + marquee + bento + Matrix stats + mobile card */}
       <section className="relative -mt-16 flex flex-col items-center overflow-hidden px-6 pb-16">
         {/* dithered floor */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-25 h-56 md:h-100">
@@ -402,6 +409,55 @@ export default function Home() {
         {/* bento grid */}
         <div className="relative z-30 mb-32 w-full max-w-5xl hidden lg:block">
           <BagsBento />
+        </div>
+
+        {/* Matrix "show off" stats card */}
+        <div className="relative z-30 mb-16 w-full max-w-5xl">
+          <div className="rounded-3xl px-6 py-6 md:px-8 md:py-7">
+            {/* NOTE: on mobile this is column + centered; md+ it's row + spaced */}
+            <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between">
+              {/* Copy + digits */}
+              <div className="w-full space-y-4 text-center md:max-w-md md:text-left">
+                <div className="flex items-center justify-center gap-3 md:justify-start">
+                  <div className="flex items-center gap-[6px]">
+                    {FUNDED_TODAY_DIGITS.map((digit, index) => (
+                      <Matrix
+                        key={`${digit}-${index}`}
+                        rows={7}
+                        cols={5}
+                        pattern={digits[Number(digit)]}
+                        size={12}
+                        gap={2}
+                        ariaLabel={`Digit ${digit}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-xs text-neutral-400 md:text-sm">
+                  People got backed on Bags in the last 24 hours.
+                </p>
+              </div>
+
+              {/* Wave animation – hidden on small screens */}
+              <div className="hidden w-full justify-start md:flex md:w-auto md:justify-end">
+                <Matrix
+                  rows={7}
+                  cols={7}
+                  frames={wave}
+                  fps={20}
+                  size={16}
+                  gap={3}
+                  palette={{
+                    on: "#02FF40",
+                    off: "rgba(2, 255, 64, 0.16)",
+                  }}
+                  ariaLabel="Funding activity visualization"
+                  className="mx-auto md:mr-1"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Bags Mobile card */}

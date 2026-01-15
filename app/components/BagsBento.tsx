@@ -9,6 +9,7 @@ import {
   IconMessageCircle2,
   IconBrandStocktwits,
 } from "@tabler/icons-react";
+import { IoMdSwap } from "react-icons/io";
 import { motion } from "motion/react";
 import { NumberTicker } from "./NumTick";
 
@@ -509,7 +510,7 @@ const BENTO_ITEMS = [
     description: "Support your favorite projects and fund the future.",
     header: <BuyTradeSkeleton />,
     className: "md:col-span-2",
-    icon: <IconBrandStocktwits className="h-4 w-4 text-neutral-400" />,
+    icon: <IoMdSwap className="h-4 w-4 text-neutral-400" />,
   },
 ];
 
