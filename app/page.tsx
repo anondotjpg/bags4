@@ -366,7 +366,7 @@ export default function Home() {
         </p>
 
         {/* marquee behind iPhone */}
-        <div className="pointer-events-none invisible absolute inset-x-0 top-1/7 z-10 -translate-y-1/2 overflow-hidden blur-[0.5px] md:visible">
+        <div className="pointer-events-none invisible absolute inset-x-0 top-1/8 z-10 -translate-y-1/2 overflow-hidden blur-[0.5px] md:visible">
           <FastMarquee gradient={false} speed={40} pauseOnHover={false}>
             {Array.from({ length: 3 }).flatMap((_, loopIndex) =>
               MARQUEE_TOKENS.map((token) => (
