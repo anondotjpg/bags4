@@ -330,8 +330,11 @@ export default function Home() {
 
           <motion.a
             href="https://bags.fm/launch"
-            className="relative mt-8 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black shadow-[0_0_40px_rgba(0,255,90,0.15)] transition duration-150 ease-in-out hover:scale-[1.02] md:text-lg"
+            // EDITED: Added 3D shadow and click-down physics
+            className="group relative mt-8 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black transition-all duration-150 ease-in-out md:text-lg shadow-[0_6px_0_#00cc33] hover:shadow-[0_8px_0_#00cc33] hover:-translate-y-[2px] active:shadow-none active:translate-y-[6px]"
             {...shinyAnimationProps}
+            // Override the shiny animation scale tap to avoid conflict with CSS 3D translate
+            whileTap={{ scale: 0.98 }} 
           >
             <span
               className="pointer-events-none absolute inset-0 rounded-full"

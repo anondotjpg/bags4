@@ -36,7 +36,7 @@ const LaunchSkeleton = () => {
   };
 
   const baseCard =
-    "h-full w-1/3 rounded-2xl border border-white/12 bg-black/85 p-4 flex flex-col items-center justify-center";
+    "h-full w-1/3 rounded-2xl border border-white/12 bg-black p-4 flex flex-col items-center justify-center";
 
   const chipBase =
     "mt-3 rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] text-neutral-200";
@@ -407,7 +407,7 @@ const BuyTradeSkeleton = () => {
     <div
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-900/70"
+      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-900"
     >
       {/* Top & bottom fade */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#050507] to-transparent" />
