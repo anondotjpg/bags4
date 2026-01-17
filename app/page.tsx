@@ -372,8 +372,8 @@ export default function Home() {
             muted
             playsInline
           />
-          <div className="absolute inset-0 bg-[#050507]/75" />
-          <div className="absolute inset-0 bg-linear-to-b from-[#050507] via-[#050507]/60 to-transparent" />
+          <div className="absolute inset-0 bg-[#050507]/55" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#050507] via-[#050507]/40 to-transparent" />
         </div>
 
         <p className="z-20 mb-4 text-xs tracking-wider text-neutral-700">
