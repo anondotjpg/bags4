@@ -430,55 +430,6 @@ export default function Home() {
           <BagsBento />
         </div>
 
-        {/* Matrix "show off" stats card */}
-        <div className="relative z-30 mb-16 w-full max-w-5xl">
-          <div className="rounded-3xl px-6 py-6 md:px-8 md:py-7">
-            {/* mobile: column + centered; md+: row + spaced */}
-            <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between">
-              {/* Copy + digits */}
-              <div className="w-full space-y-4 text-center md:max-w-md md:text-left">
-                <div className="flex items-center justify-center gap-3 md:justify-start">
-                  <div className="flex items-center gap-[6px]">
-                    {FUNDED_TODAY_DIGITS.map((digit, index) => (
-                      <Matrix
-                        key={`${digit}-${index}`}
-                        rows={7}
-                        cols={5}
-                        pattern={digits[Number(digit)]}
-                        size={12}
-                        gap={2}
-                        ariaLabel={`Digit ${digit}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <p className="text-xs text-neutral-400 md:text-sm">
-                  People got backed on Bags in the last 24 hours
-                </p>
-              </div>
-
-              {/* Wave animation – hidden on small screens */}
-              <div className="hidden w-full justify-start md:flex md:w-auto md:justify-end">
-                <Matrix
-                  rows={7}
-                  cols={7}
-                  frames={wave}
-                  fps={5}
-                  size={16}
-                  gap={3}
-                  palette={{
-                    on: "#02FF40",
-                    off: "rgba(2, 255, 64, 0.16)",
-                  }}
-                  ariaLabel="Funding activity visualization"
-                  className="mx-auto md:mr-1"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Bags Mobile card */}
         <div className="relative z-30 w-full max-w-5xl">
           <MagicCard className="mx-auto w-full">
