@@ -1,19 +1,20 @@
 "use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { motion, type MotionProps } from "motion/react";
+import FastMarquee from "react-fast-marquee";
 
-import { AvatarCircles } from "./components/Avatar";
-import { cn } from "@/lib/utils";
 import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
-
-import { useEffect, useRef, useState } from "react";
-import FastMarquee from "react-fast-marquee";
-import { MarqueeCard, MarqueeToken } from "./components/MarqueeCard";;
+import { MarqueeCard, MarqueeToken } from "./components/MarqueeCard";
+import { AvatarCircles } from "./components/Avatar";
+import { cn } from "@/lib/utils";
+import { Marqueee } from "./components/Marq";
 import { MagicCard } from "./components/MagicCard";
 import DitherShader from "./components/dither-shader";
-import { Marqueee } from "./components/Marq";
+import { BagsBento } from "./components/BagsBento";
 
 // ElevenLabs Matrix + presets (your local implementation using useId)
 import { Matrix, digits, wave } from "./components/Matrix";
@@ -40,17 +41,6 @@ const shinyAnimationProps: MotionProps = {
 } as MotionProps;
 
 const EARNINGS_START = 21_000_000;
-
-// Helper function to format holder counts (e.g., 3876 → "3.88k")
-const formatHolderCount = (count: string): string => {
-  const num = parseInt(count.replace(/,/g, ""), 10);
-  if (isNaN(num)) return count;
-  if (num >= 1000) {
-    return (num / 1000).toFixed(2).replace(/\.?0+$/, "") + "k";
-  }
-  return count;
-};
-
 const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 
 // 🔢 Daily flex number (only shown via Matrix digits)
@@ -71,54 +61,63 @@ function RotatingWord() {
   return <span>{VARIABLE_WORDS[index]}</span>;
 }
 
-// Token data for floating cards
-const LEFT_TOKENS = [
+const MARQUEE_TOKENS: MarqueeToken[] = [
   {
     id: 1,
+    name: "Ralph Wiggum",
     symbol: "RALPH",
-    tokenImage: "/ral.webp",
-    earningsDisplay: "$225,080",
-    holdersDisplay: "6,427",
+    tokenImage: "/t1.webp",
+    feeEarnerUsername: "GeoffreyHuntley",
+    feeEarnerAvatar: "/c1.webp",
+    earningsDisplay: "$105,097.26",
+    holdersDisplay: "2,542",
   },
   {
     id: 2,
-    symbol: "GSD",
-    tokenImage: "/gsd.webp",
-    earningsDisplay: "$70,449",
-    holdersDisplay: "2,900",
+    name: "Vibe Virtual Machine",
+    symbol: "VVM",
+    tokenImage: "/z.webp",
+    feeEarnerUsername: "thekaranchawla",
+    feeEarnerAvatar: "/c2.webp",
+    earningsDisplay: "$28,952",
+    holdersDisplay: "775",
   },
   {
     id: 3,
-    symbol: "SKILLSTACK",
-    tokenImage: "/ss.webp",
-    earningsDisplay: "$15,398",
-    holdersDisplay: "991",
+    name: "Nyan Cat",
+    symbol: "NYAN",
+    tokenImage: "/t3.webp",
+    feeEarnerUsername: "PRguitarman",
+    feeEarnerAvatar: "/c3.webp",
+    earningsDisplay: "$400,308",
+    holdersDisplay: "3,579",
   },
-];
-
-const RIGHT_TOKENS = [
   {
     id: 4,
-    symbol: "NPM",
-    tokenImage: "/n.webp",
-    earningsDisplay: "$139,936",
-    holdersDisplay: "3,737",
+    name: "Natecoin",
+    symbol: "NATE",
+    tokenImage: "/t4.webp",
+    feeEarnerUsername: "Nate_Esparza",
+    feeEarnerAvatar: "/c4.webp",
+    earningsDisplay: "$18,309",
+    holdersDisplay: "430",
   },
   {
     id: 5,
-    symbol: "X1XHLOL",
-    tokenImage: "/xh.webp",
-    earningsDisplay: "$53,313",
-    holdersDisplay: "1,550",
-  },
-  {
-    id: 6,
-    symbol: "GAS",
-    tokenImage: "/gas.webp",
-    earningsDisplay: "$309,309",
-    holdersDisplay: "9,222",
+    name: "Claude Memory",
+    symbol: "CMEM",
+    tokenImage: "/t5.webp",
+    feeEarnerUsername: "Claude_Memory",
+    feeEarnerAvatar: "/c5.webp",
+    earningsDisplay: "$21,058",
+    holdersDisplay: "768",
   },
 ];
+
+const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
+  imageUrl: token.feeEarnerAvatar,
+  profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
+}));
 
 const reviews = [
   {
@@ -180,7 +179,7 @@ const ReviewCard = ({
         />
 
         {/* Verified badge: fixed size, no squish */}
-        <div className="absolute -bottom-1 -right-1 z-10 grid h-[16px] w-[16px] shrink-0 place-items-center rounded-full bg-[#0d0d0f]">
+        <div className="absolute -bottom-1 -right-1 z-10 grid h-[16px] w-[16px] shrink-0 place-items-center rounded-full bg-black">
           <img
             src="/ver.webp"
             alt=""
@@ -241,127 +240,11 @@ export function Marquee3D() {
         ))}
       </Marqueee>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#0d0d0f] to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0d0d0f] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#050507] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#050507] to-transparent" />
     </div>
   );
 }
-
-// Static Floating Token Card Component
-const FloatingTokenCard = ({
-  token,
-  className,
-  animationDelay = 0,
-}: {
-  token: {
-    id: number;
-    symbol: string;
-    tokenImage: string;
-    earningsDisplay: string;
-    holdersDisplay: string;
-  };
-  className?: string;
-  animationDelay?: number;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{
-      duration: 0.6,
-      delay: animationDelay,
-      ease: [0.23, 1, 0.32, 1],
-    }}
-    className={cn(
-      "absolute w-[180px] rounded-2xl bg-[#141414] border border-white/[0.08] p-5 shadow-2xl shadow-black/60",
-      "hover:border-white/15 hover:bg-[#0e0e10] transition-all duration-300",
-      className,
-    )}
-  >
-    {/* Holders - top right */}
-    <div className="absolute top-3 right-3 flex items-center gap-1 text-neutral-500 text-xs">
-      <svg className="w-3 h-3 fill-neutral-500" viewBox="0 0 24 24">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-      </svg>
-      <span>{formatHolderCount(token.holdersDisplay)}</span>
-    </div>
-    <div className="flex justify-center mb-3">
-      <div className="w-14 h-14 rounded-full overflow-hidden bg-white/5 shadow-lg">
-        <img
-          src={token.tokenImage}
-          alt={token.symbol}
-          className="w-full h-full object-cover"
-        />
-      </div>
-    </div>
-    <p className="text-center text-white font-semibold text-sm tracking-wide mb-2">
-      {token.symbol}
-    </p>
-    <p className="text-center text-neutral-500 text-lg">
-      <span className="text-neutral-300 font-medium">
-        {token.earningsDisplay}
-      </span>{" "}
-      <span className="text-base">raised</span>
-    </p>
-  </motion.div>
-);
-
-const MARQUEE_TOKENS: MarqueeToken[] = [
-  {
-    id: 1,
-    name: "Ralph Wiggum",
-    symbol: "RALPH",
-    tokenImage: "/t1.webp",
-    feeEarnerUsername: "GeoffreyHuntley",
-    feeEarnerAvatar: "/c1.webp",
-    earningsDisplay: "$105,097.26",
-    holdersDisplay: "2,542",
-  },
-  {
-    id: 2,
-    name: "Vibe Virtual Machine",
-    symbol: "VVM",
-    tokenImage: "/z.webp",
-    feeEarnerUsername: "thekaranchawla",
-    feeEarnerAvatar: "/c2.webp",
-    earningsDisplay: "$28,952",
-    holdersDisplay: "775",
-  },
-  {
-    id: 3,
-    name: "Nyan Cat",
-    symbol: "NYAN",
-    tokenImage: "/t3.webp",
-    feeEarnerUsername: "PRguitarman",
-    feeEarnerAvatar: "/c3.webp",
-    earningsDisplay: "$400,308",
-    holdersDisplay: "3,579",
-  },
-  {
-    id: 4,
-    name: "Natecoin",
-    symbol: "NATE",
-    tokenImage: "/t4.webp",
-    feeEarnerUsername: "Nate_Esparza",
-    feeEarnerAvatar: "/c4.webp",
-    earningsDisplay: "$18,309",
-    holdersDisplay: "430",
-  },
-  {
-    id: 5,
-    name: "Claude Memory",
-    symbol: "CMEM",
-    tokenImage: "/t5.webp",
-    feeEarnerUsername: "Claude_Memory",
-    feeEarnerAvatar: "/c5.webp",
-    earningsDisplay: "$21,058",
-    holdersDisplay: "768",
-  },
-];
-
-const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
-  imageUrl: token.feeEarnerAvatar,
-  profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
-}));
 
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
@@ -374,18 +257,16 @@ export default function Home() {
     const interval = setInterval(() => {
       const increment = Math.floor(Math.random() * 401) + 300;
       earningsValueRef.current += increment;
-      node.textContent = `$${earningsValueRef.current.toLocaleString(
-        "en-US",
-      )}+`;
+      node.textContent = `$${earningsValueRef.current.toLocaleString("en-US")}+`;
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#0d0d0f] text-white">
+    <main className="min-h-screen bg-[#050507] text-white">
       {/* HEADER */}
-      <header className="border-b-2 border-white/5 bg-[#0d0d0f]">
+      <header className="border-b-2 border-white/5 bg-[#050507]">
         <div className="mx-auto flex max-w-6xl items-center gap-5 px-5 py-4 md:px-7">
           <div className="flex items-center">
             <Image
@@ -436,49 +317,23 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section className="relative flex items-center justify-center overflow-hidden px-6 py-44">
-        {/* HERO dotted map background – zoomed */}
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute left-1/2 top-[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
-            <DottedMap />
-          </div>
-          <div className="absolute inset-0 bg-[#0d0d0f]/70" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/60 to-[#0d0d0f]" />
+      <section className="relative flex items-center justify-center overflow-hidden px-6 py-32">
+        {/* HERO floor background (replaces DottedMap) */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <DitherShader
+            src="floor.webp"
+            gridSize={3}
+            ditherMode="bayer"
+            colorMode="grayscale"
+            className="h-full w-full"
+          />
+
+          {/* overall darken */}
+          <div className="absolute inset-0 bg-[#050507]/85" />
+
+          {/* flipped gradient (fade INTO bottom) */}
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#050507]/35 to-[#050507]" />
         </div>
-
-        {/* LEFT FLOATING CARDS - positioned relative to center */}
-        <FloatingTokenCard
-          token={LEFT_TOKENS[0]}
-          className="hidden xl:block top-[8%] left-[calc(50%-480px)] -rotate-6"
-          animationDelay={0.1}
-        />
-        <FloatingTokenCard
-          token={LEFT_TOKENS[1]}
-          className="hidden xl:block top-[38%] left-[calc(50%-520px)] rotate-3"
-          animationDelay={0.25}
-        />
-        <FloatingTokenCard
-          token={LEFT_TOKENS[2]}
-          className="hidden xl:block top-[68%] left-[calc(50%-460px)] -rotate-3"
-          animationDelay={0.4}
-        />
-
-        {/* RIGHT FLOATING CARDS - positioned relative to center */}
-        <FloatingTokenCard
-          token={RIGHT_TOKENS[0]}
-          className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
-          animationDelay={0.15}
-        />
-        <FloatingTokenCard
-          token={RIGHT_TOKENS[1]}
-          className="hidden xl:block top-[35%] left-[calc(50%+340px)] -rotate-3"
-          animationDelay={0.3}
-        />
-        <FloatingTokenCard
-          token={RIGHT_TOKENS[2]}
-          className="hidden xl:block top-[65%] left-[calc(50%+280px)] rotate-3"
-          animationDelay={0.45}
-        />
 
         <div className="z-10 -mt-16 max-w-3xl text-center">
           <div className="relative inline-flex items-center">
@@ -503,19 +358,19 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[72px]">
+          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text:white text-white md:text-[87px]">
             We&apos;re funding
             <br />
-            your ideas
+            the future.
           </h1>
 
-          <p className="mt-6 text-base text-neutral-400 md:text-lg">
-            Verify Project. Build Community. Earn Forever.
+          <p className="mt-4 text-sm text-neutral-400 md:text-base">
+            What are you building?
           </p>
 
           <motion.a
             href="https://bags.fm/launch"
-            className="group relative mt-6 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black transition-all duration-150 ease-in-out md:text-lg shadow-[0_6px_0_#00cc33] hover:shadow-[0_8px_0_#00cc33] hover:-translate-y-[2px] active:shadow-none active:translate-y-[6px]"
+            className="group relative mt-8 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black transition-all duration-150 ease-in-out md:text-lg shadow-[0_6px_0_#00cc33] hover:shadow-[0_8px_0_#00cc33] hover:-translate-y-[2px] active:shadow-none active:translate-y-[6px]"
             {...shinyAnimationProps}
             whileTap={{ scale: 0.98 }}
           >
@@ -532,6 +387,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* iPhone + floor + marquee + bento + Matrix stats + mobile card */}
       <section className="relative -mt-16 flex flex-col items-center overflow-hidden px-6 pb-16">
         {/* dithered floor */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-25 h-56 md:h-100">
@@ -542,16 +398,47 @@ export default function Home() {
             colorMode="grayscale"
             className="h-full w-full"
           />
-          <div className="absolute inset-0 bg-[#0d0d0f]/75" />
-          <div className="absolute inset-0 bg-linear-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
+          <div className="absolute inset-0 bg-[#050507]/75" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#050507] via-[#050507]/60 to-transparent" />
         </div>
 
         <p className="z-20 mb-4 text-xs tracking-wider text-neutral-700">
           you are clicks away
         </p>
 
+        {/* marquee behind iPhone */}
+        <div className="pointer-events-none invisible absolute inset-x-0 top-1/6 z-10 -translate-y-1/2 overflow-hidden blur-[0.5px] md:visible">
+          <FastMarquee gradient={false} speed={40} pauseOnHover={false}>
+            {Array.from({ length: 3 }).flatMap((_, loopIndex) =>
+              MARQUEE_TOKENS.map((token) => (
+                <MarqueeCard
+                  key={`${loopIndex}-${token.id}`}
+                  token={token}
+                  className="mr-4"
+                />
+              )),
+            )}
+          </FastMarquee>
+        </div>
+
         {/* iPhone */}
         <div className="relative z-30 w-[320px] md:w-[434px]">
+          <div
+            className="pointer-events-none absolute top-0 z-20 h-[70%] w-[75px]"
+            style={{
+              right: "97%",
+              background:
+                "linear-gradient(to left, rgba(5,5,7,1) 0%, rgba(5,5,7,0.7) 30%, rgba(5,5,7,0.4) 60%, rgba(5,5,7,0) 100%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute top-0 z-20 h-[70%] w-[75px]"
+            style={{
+              left: "97%",
+              background:
+                "linear-gradient(to right, rgba(5,5,7,1) 0%, rgba(5,5,7,0.7) 30%, rgba(5,5,7,0.4) 60%, rgba(5,5,7,0) 100%)",
+            }}
+          />
           <div className="z-30">
             <Iphone src="flex3.png" />
           </div>
