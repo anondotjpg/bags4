@@ -372,7 +372,7 @@ export default function Home() {
         </div>
 
         <p className="z-20 mb-4 text-xs tracking-wider text-neutral-700">
-          you are clicks away from this
+          you are clicks away
         </p>
 
         {/* marquee behind iPhone */}
