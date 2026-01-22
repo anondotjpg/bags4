@@ -153,21 +153,56 @@ const ReviewCard = ({
 }) => (
   <figure
     className={cn(
-      "relative h-full w-fit cursor-pointer overflow-hidden rounded-xl border p-4 sm:w-36 md:w-48",
-      "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-      "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+      // 🔒 Fixed, stable sizing for marquee (no h-full / w-fit)
+      "relative flex-shrink-0 w-full max-w-[260px] cursor-pointer overflow-hidden rounded-xl border p-4",
+      // 🎨 Subtle, non-layout hover (color only, no size change)
+      "border-gray-950/[.10] bg-gray-950/[.03] hover:bg-gray-950/[.08]",
+      "dark:border-gray-50/[.10] dark:bg-gray-50/[.08] dark:hover:bg-gray-50/[.14]",
+      // ⚙️ Only color transition (no transition-all = less jank)
+      "transition-colors duration-200 ease-out"
     )}
+    style={{
+      // Hint to browser: this is moving inside a marquee
+      willChange: "transform",
+    }}
   >
     <div className="flex flex-row items-center gap-2">
-      <img className="rounded-full" width="32" height="32" alt="" src={img} />
-      <div className="flex flex-col">
-        <figcaption className="text-sm font-medium dark:text-white">
+      {/* Avatar wrapper: fixed box */}
+      <div className="relative h-8 w-8 shrink-0">
+        <img
+          src={img}
+          alt=""
+          draggable={false}
+          width={32}
+          height={32}
+          className="block h-8 w-8 rounded-full object-cover"
+        />
+
+        {/* Verified badge: fixed size, no squish */}
+        <div className="absolute -bottom-1 -right-1 z-10 grid h-[16px] w-[16px] shrink-0 place-items-center rounded-full bg-black">
+          <img
+            src="/ver.webp"
+            alt=""
+            draggable={false}
+            width={12}
+            height={12}
+            className="block h-[12px] w-[12px] object-contain"
+          />
+        </div>
+      </div>
+
+      <div className="flex min-w-0 flex-col">
+        <figcaption className="text-sm font-medium text-white">
           {name}
         </figcaption>
-        <p className="text-xs font-medium dark:text-white/40">{username}</p>
+        <p className="text-xs font-medium text-white/40">{username}</p>
       </div>
     </div>
-    <blockquote className="mt-2 text-sm">{body}</blockquote>
+
+    {/* Body: fixed-ish height so cards don't resize and jitter */}
+    <blockquote className="mt-2 text-sm leading-snug text-neutral-200 min-h-[48px]">
+      {body}
+    </blockquote>
   </figure>
 );
 
@@ -222,9 +257,7 @@ export default function Home() {
     const interval = setInterval(() => {
       const increment = Math.floor(Math.random() * 401) + 300;
       earningsValueRef.current += increment;
-      node.textContent = `$${earningsValueRef.current.toLocaleString(
-        "en-US",
-      )}+`;
+      node.textContent = `$${earningsValueRef.current.toLocaleString("en-US")}+`;
     }, 1000);
 
     return () => clearInterval(interval);
@@ -337,11 +370,9 @@ export default function Home() {
 
           <motion.a
             href="https://bags.fm/launch"
-            // EDITED: Added 3D shadow and click-down physics
             className="group relative mt-8 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black transition-all duration-150 ease-in-out md:text-lg shadow-[0_6px_0_#00cc33] hover:shadow-[0_8px_0_#00cc33] hover:-translate-y-[2px] active:shadow-none active:translate-y-[6px]"
             {...shinyAnimationProps}
-            // Override the shiny animation scale tap to avoid conflict with CSS 3D translate
-            whileTap={{ scale: 0.98 }} 
+            whileTap={{ scale: 0.98 }}
           >
             <span
               className="pointer-events-none absolute inset-0 rounded-full"
