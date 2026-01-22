@@ -296,7 +296,7 @@ export default function Home() {
           />
 
           {/* overall darken */}
-          <div className="absolute inset-0 bg-[#050507]/75" />
+          <div className="absolute inset-0 bg-[#050507]/85" />
 
           {/* flipped gradient (fade INTO bottom) */}
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#050507]/35 to-[#050507]" />
