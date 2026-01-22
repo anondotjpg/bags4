@@ -510,7 +510,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 text-base text-neutral-400 md:text-lg">
-            Verify Project. Build Community. Earn Forever.
+            Verify. Grow. Earn.
           </p>
 
           <motion.a
