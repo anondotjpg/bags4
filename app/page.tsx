@@ -258,12 +258,6 @@ export default function Home() {
 
           <nav className="hidden items-center gap-5 text-sm md:flex">
             <a
-              href="https://bags.fm/drops"
-              className="flex cursor-pointer items-center gap-1 text-[14px] text-neutral-300 transition-colors hover:text-white"
-            >
-              <span>[$100K challenge]</span>
-            </a>
-            <a
               href="https://bags.fm/how-it-works"
               className="cursor-pointer text-[14px] text-neutral-300 transition-colors hover:text-white"
             >
