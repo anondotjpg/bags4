@@ -1,7 +1,13 @@
 "use client";
+
 import Image from "next/image";
 import { FiPlus, FiSearch } from "react-icons/fi";
-import { motion, type MotionProps } from "motion/react";
+import {
+  motion,
+  type MotionProps,
+  useScroll,
+  AnimatePresence,
+} from "motion/react";
 
 import { AvatarCircles } from "./components/Avatar";
 import { cn } from "@/lib/utils";
@@ -9,8 +15,6 @@ import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
 
 import { useEffect, useRef, useState } from "react";
-import FastMarquee from "react-fast-marquee";
-import { MarqueeCard, MarqueeToken } from "./components/MarqueeCard";;
 import { MagicCard } from "./components/MagicCard";
 import DitherShader from "./components/dither-shader";
 import { Marqueee } from "./components/Marq";
@@ -57,6 +61,7 @@ const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
+// rotating word in Bags Mobile card
 function RotatingWord() {
   const [index, setIndex] = useState(0);
 
@@ -154,21 +159,14 @@ const ReviewCard = ({
 }) => (
   <figure
     className={cn(
-      // 🔒 Fixed, stable sizing for marquee (no h-full / w-fit)
       "relative flex-shrink-0 w-full max-w-[260px] cursor-pointer overflow-hidden rounded-xl border p-4",
-      // 🎨 Subtle, non-layout hover (color only, no size change)
       "border-gray-950/[.10] bg-gray-950/[.03] hover:bg-gray-950/[.08]",
       "dark:border-gray-50/[.10] dark:bg-gray-50/[.08] dark:hover:bg-gray-50/[.14]",
-      // ⚙️ Only color transition (no transition-all = less jank)
-      "transition-colors duration-200 ease-out"
+      "transition-colors duration-200 ease-out",
     )}
-    style={{
-      // Hint to browser: this is moving inside a marquee
-      willChange: "transform",
-    }}
+    style={{ willChange: "transform" }}
   >
     <div className="flex flex-row items-center gap-2">
-      {/* Avatar wrapper: fixed box */}
       <div className="relative h-8 w-8 shrink-0">
         <img
           src={img}
@@ -178,8 +176,6 @@ const ReviewCard = ({
           height={32}
           className="block h-8 w-8 rounded-full object-cover"
         />
-
-        {/* Verified badge: fixed size, no squish */}
         <div className="absolute -bottom-1 -right-1 z-10 grid h-[16px] w-[16px] shrink-0 place-items-center rounded-full bg-[#0d0d0f]">
           <img
             src="/ver.webp"
@@ -200,8 +196,7 @@ const ReviewCard = ({
       </div>
     </div>
 
-    {/* Body: fixed-ish height so cards don't resize and jitter */}
-    <blockquote className="mt-2 text-sm leading-snug text-neutral-200 min-h-[48px]">
+    <blockquote className="mt-2 min-h-[48px] text-sm leading-snug text-neutral-200">
       {body}
     </blockquote>
   </figure>
@@ -247,7 +242,7 @@ export function Marquee3D() {
   );
 }
 
-// Static Floating Token Card Component
+// Static Floating Token Card Component (used only in hero)
 const FloatingTokenCard = ({
   token,
   className,
@@ -277,33 +272,43 @@ const FloatingTokenCard = ({
       className,
     )}
   >
-    {/* Holders - top right */}
-    <div className="absolute top-3 right-3 flex items-center gap-1 text-neutral-500 text-xs">
-      <svg className="w-3 h-3 fill-neutral-500" viewBox="0 0 24 24">
+    <div className="absolute right-3 top-3 flex items-center gap-1 text-xs text-neutral-500">
+      <svg className="h-3 w-3 fill-neutral-500" viewBox="0 0 24 24">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
       </svg>
       <span>{formatHolderCount(token.holdersDisplay)}</span>
     </div>
-    <div className="flex justify-center mb-3">
-      <div className="w-14 h-14 rounded-full overflow-hidden bg-white/5 shadow-lg">
+    <div className="mb-3 flex justify-center">
+      <div className="h-14 w-14 overflow-hidden rounded-full bg-white/5 shadow-lg">
         <img
           src={token.tokenImage}
           alt={token.symbol}
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
         />
       </div>
     </div>
-    <p className="text-center text-white font-semibold text-sm tracking-wide mb-2">
+    <p className="mb-2 text-center text-sm font-semibold tracking-wide text-white">
       {token.symbol}
     </p>
-    <p className="text-center text-neutral-500 text-lg">
-      <span className="text-neutral-300 font-medium">
+    <p className="text-center text-lg text-neutral-500">
+      <span className="font-medium text-neutral-300">
         {token.earningsDisplay}
       </span>{" "}
       <span className="text-base">raised</span>
     </p>
   </motion.div>
 );
+
+type MarqueeToken = {
+  id: number;
+  name: string;
+  symbol: string;
+  tokenImage: string;
+  feeEarnerUsername: string;
+  feeEarnerAvatar: string;
+  earningsDisplay: string;
+  holdersDisplay: string;
+};
 
 const MARQUEE_TOKENS: MarqueeToken[] = [
   {
@@ -362,6 +367,270 @@ const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
   imageUrl: token.feeEarnerAvatar,
   profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
 }));
+
+// ---------------------------------------------------------------------------
+// Persona data (creator / trader / connector)
+// ---------------------------------------------------------------------------
+
+const ROLE_SECTIONS = [
+  {
+    key: "creator",
+    label: "create",
+    eyebrow: "launch in seconds",
+    title: "Launch a coin and earn royalties forever.",
+    body: "Turn your ideas, audience, or projects into tradeable tokens. Verify with your socials, build community funding, and get 1% of all trading volume routed back to you.",
+    footer: "",
+  },
+  {
+    key: "trader",
+    label: "trade",
+    eyebrow: "trade what's trending",
+    title: "Discover and trade the next big thing.",
+    body: "Access transparent launches, real-time metrics, and organic flow on Solana. Buy/sell coins and creator tokens before the timeline catches up.",
+    footer: "",
+  },
+  {
+    key: "connector",
+    label: "connect",
+    eyebrow: "build bridges onchain",
+    title: "Connect creators to Bags.",
+    body: "Sign up creators to Bags using your ref link and earn 50% of protocol fees when they launch. forever.",
+    footer: "",
+  },
+] as const;
+
+function PersonaCopy({
+  activeIndex,
+  onTabSelect,
+}: {
+  activeIndex: number;
+  onTabSelect?: (index: number) => void;
+}) {
+  return (
+    <div className="flex w-full max-w-sm flex-col text-left">
+      {/* Tabs (fixed widths so nothing jiggles) */}
+      <div
+        className="inline-flex w-full items-center rounded-full bg-white/5 p-1 text-[14px] font-medium text-neutral-400"
+        role="tablist"
+        aria-label="persona tabs"
+      >
+        {ROLE_SECTIONS.map((r, index) => {
+          const isActive = index === activeIndex;
+          return (
+            <button
+              key={r.key}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              tabIndex={isActive ? 0 : -1}
+              onClick={() => onTabSelect?.(index)}
+              className={cn(
+                "flex-1 rounded-full px-3 py-1.5 text-center transition-colors duration-200",
+                isActive
+                  ? "bg-white text-black shadow-[0_0_0_1px_rgba(0,0,0,0.85)]"
+                  : "hover:text-white/80",
+              )}
+            >
+              {r.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Fixed-height stage so copy NEVER shifts (content crossfades, layout stays) */}
+      <div className="relative mt-4 min-h-[190px]">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={ROLE_SECTIONS[activeIndex].key}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <p className="text-xs font-medium text-[#02FF40]/90">
+              {ROLE_SECTIONS[activeIndex].eyebrow}
+            </p>
+            <h3 className="mt-2 text-lg font-semibold leading-tight text-white">
+              {ROLE_SECTIONS[activeIndex].title}
+            </h3>
+            <p className="mt-2 text-[13px] leading-relaxed text-neutral-300">
+              {ROLE_SECTIONS[activeIndex].body}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Scroll-driven persona section (no floating cards, no floor.webp here)
+// ---------------------------------------------------------------------------
+
+// --- replace your PersonaScrollSection() with this version ---
+// (everything else in the file can stay exactly the same)
+
+function PersonaScrollSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
+
+  // manual override lock (so scroll doesn't instantly overwrite clicks)
+  const manualLockUntilRef = useRef<number>(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  // Scroll drives activeIndex unless user clicked recently
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (value) => {
+      if (Date.now() < manualLockUntilRef.current) return;
+
+      const segments = ROLE_SECTIONS.length; // 3
+      const idx = Math.min(
+        segments - 1,
+        Math.floor(Math.max(0, Math.min(0.999999, value)) * segments),
+      );
+      setActiveIndex(idx);
+    });
+
+    return () => unsubscribe();
+  }, [scrollYProgress]);
+
+  // Detect "ready" (sticky container centered in viewport) -> fade side panels
+  useEffect(() => {
+    const el = stickyRef.current;
+    if (!el) return;
+
+    let raf = 0;
+
+    const tick = () => {
+      const rect = el.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const viewportCenter = window.innerHeight / 2;
+      const dist = Math.abs(centerY - viewportCenter);
+
+      // within 70px of perfect center = ready
+      setIsReady(dist < 70);
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const onTabSelect = (index: number) => {
+    setActiveIndex(index);
+    manualLockUntilRef.current = Date.now() + 1200; // lock scroll updates briefly
+  };
+
+  return (
+    <section ref={sectionRef} className="relative h-[320vh] -mt-40">
+      <div
+        ref={stickyRef}
+        className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-20"
+      >
+        <div className="relative z-10 grid w-full max-w-5xl grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          {/* Left: persona copy (lg+ only) */}
+          <motion.div
+            className="hidden justify-end lg:flex"
+            initial={false}
+            animate={{
+              opacity: isReady ? 1 : 0,
+              y: isReady ? 0 : 10,
+              filter: isReady ? "blur(0px)" : "blur(3px)",
+              pointerEvents: isReady ? "auto" : "none",
+            }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="w-full max-w-sm">
+              <PersonaCopy activeIndex={activeIndex} onTabSelect={onTabSelect} />
+            </div>
+          </motion.div>
+
+          {/* Center: iPhone perfectly centered */}
+          <div className="flex justify-center">
+            <div className="relative w-[320px] md:w-[434px]">
+              <Iphone src="flex3.png" />
+            </div>
+          </div>
+
+          {/* Right: QR + download button (lg+ only) */}
+          <motion.div
+            className="hidden lg:flex justify-start"
+            initial={false}
+            animate={{
+              opacity: isReady ? 1 : 0,
+              y: isReady ? 0 : 10,
+              filter: isReady ? "blur(0px)" : "blur(3px)",
+              pointerEvents: isReady ? "auto" : "none",
+            }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="w-full max-w-sm">
+              <div className="p-4">
+                <a
+                  href="https://apps.apple.com/us/app/bags-trade-crypto-memes/id6473196333"
+                  className="block"
+                >
+                  <Image
+                    src="/bags-ios-qr.png"
+                    alt="Scan to download Bags on iOS"
+                    width={220}
+                    height={220}
+                    className="mx-auto w-[220px] rounded-xl border border-white/10"
+                    priority={false}
+                  />
+                </a>
+
+                <a
+                  href="https://bags.fm/app-links"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
+                >
+                  download now
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Small screens: keep always visible + clickable tabs */}
+          <div className="mt-8 block lg:hidden">
+            <PersonaCopy activeIndex={activeIndex} onTabSelect={onTabSelect} />
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <a href="https://apps.apple.com/us/app/bags-trade-crypto-memes/id6473196333">
+                <Image
+                  src="/bags-ios-qr.png"
+                  alt="Scan to download Bags on iOS"
+                  width={200}
+                  height={200}
+                  className="mx-auto w-[200px] rounded-xl border border-white/10"
+                />
+              </a>
+
+              <a
+                href="https://bags.fm/app-links"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black transition-colors duration-150 hover:bg-[#02FF40]/90"
+              >
+                download now
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// MAIN PAGE
+// ---------------------------------------------------------------------------
 
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
@@ -446,7 +715,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/60 to-[#0d0d0f]" />
         </div>
 
-        {/* LEFT FLOATING CARDS - positioned relative to center */}
+        {/* LEFT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={LEFT_TOKENS[0]}
           className="hidden xl:block top-[8%] left-[calc(50%-480px)] -rotate-6"
@@ -463,7 +732,7 @@ export default function Home() {
           animationDelay={0.4}
         />
 
-        {/* RIGHT FLOATING CARDS - positioned relative to center */}
+        {/* RIGHT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={RIGHT_TOKENS[0]}
           className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
@@ -515,7 +784,7 @@ export default function Home() {
 
           <motion.a
             href="https://bags.fm/launch"
-            className="group relative mt-6 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black transition-all duration-150 ease-in-out md:text-lg shadow-[0_6px_0_#00cc33] hover:shadow-[0_8px_0_#00cc33] hover:-translate-y-[2px] active:shadow-none active:translate-y-[6px]"
+            className="group relative mt-6 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#02FF40] px-10 py-3 text-base font-semibold text-black shadow-[0_6px_0_#00cc33] transition-all duration-150 ease-in-out md:text-lg hover:-translate-y-[2px] hover:shadow-[0_8px_0_#00cc33] active:translate-y-[6px] active:shadow-none"
             {...shinyAnimationProps}
             whileTap={{ scale: 0.98 }}
           >
@@ -532,9 +801,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative -mt-16 flex flex-col items-center overflow-hidden px-6 pb-16">
-        {/* dithered floor */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-25 h-56 md:h-100">
+      {/* SCROLL-DRIVEN PERSONA + IPHONE SECTION (no floor, no floats) */}
+      <PersonaScrollSection />
+
+      {/* BOTTOM SECTION – marquee + Bags Mobile card with floor.webp at very bottom */}
+      <section className="relative flex flex-col items-center overflow-hidden px-6 pb-16 pt-24">
+        {/* floor.webp way at bottom */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-56 md:h-72">
           <DitherShader
             src="floor.webp"
             gridSize={3}
@@ -546,24 +819,13 @@ export default function Home() {
           <div className="absolute inset-0 bg-linear-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
         </div>
 
-        <p className="z-20 mb-4 text-xs tracking-wider text-neutral-700">
-          you are clicks away
-        </p>
+        {/* removed extra “you are clicks away” text */}
 
-        {/* iPhone */}
-        <div className="relative z-30 w-[320px] md:w-[434px]">
-          <div className="z-30">
-            <Iphone src="flex3.png" />
-          </div>
-        </div>
-
-        {/* vertical marquee */}
-        <div className="relative z-30 mt-10 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
+        <div className="relative z-30 mt-4 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
           <Marquee3D />
         </div>
 
-        {/* Bags Mobile card */}
-        <div className="mt-36 lg:mt-0 relative z-30 w-full max-w-5xl">
+        <div className="relative z-30 mt-10 w-full max-w-5xl">
           <MagicCard className="mx-auto w-full">
             <div className="flex w-full flex-col items-center justify-between gap-2 px-6 py-4 md:flex-row md:items-start md:gap-10 md:px-10 md:py-7 md:pb-8">
               <div className="flex w-full items-center gap-4 md:flex-1 md:items-start md:gap-5">
