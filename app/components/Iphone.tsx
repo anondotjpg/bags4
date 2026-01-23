@@ -31,6 +31,9 @@ const SCREEN_BORDER = "#202020";
 const SENSOR_BG = "#141414";
 const SENSOR_INNER = "#262626";
 
+// Page background for safe-area fill
+const SCREEN_BG = "#0d0d0f";
+
 export interface IphoneProps extends HTMLAttributes<HTMLDivElement> {
   src?: string;
   videoSrc?: string;
@@ -80,7 +83,7 @@ export function Iphone({
       }}
       {...props}
     >
-      {/* 🔳 Solid black backing, slightly oversized so nothing leaks through */}
+      {/* 🔳 Solid backing under the screen (slightly oversized) */}
       <div
         className="pointer-events-none absolute z-0"
         style={{
@@ -91,7 +94,7 @@ export function Iphone({
           borderRadius: `${RADIUS_H + BACKING_PAD_PCT}% / ${
             RADIUS_V + BACKING_PAD_PCT
           }%`,
-          backgroundColor: "#000000",
+          backgroundColor: SCREEN_BG, // 👈 match page background, not pure black
         }}
       />
 
@@ -105,6 +108,7 @@ export function Iphone({
             width: `${WIDTH_PCT}%`,
             height: `${HEIGHT_PCT}%`,
             borderRadius: `${RADIUS_H}% / ${RADIUS_V}%`,
+            backgroundColor: SCREEN_BG, // solid bg behind video too
           }}
         >
           <video
@@ -129,9 +133,13 @@ export function Iphone({
             width: `${WIDTH_PCT}%`,
             height: `${HEIGHT_PCT}%`,
             borderRadius: `${RADIUS_H}% / ${RADIUS_V}%`,
+            backgroundColor: SCREEN_BG, // 👈 never transparent in the safe area
           }}
         >
-          <div className="relative size-full">
+          <div
+            className="relative size-full"
+            style={{ backgroundColor: SCREEN_BG }}
+          >
             {/* Previous screenshot fading OUT */}
             {prevSrc && (
               <motion.img
@@ -139,6 +147,7 @@ export function Iphone({
                 src={prevSrc}
                 alt=""
                 className="absolute inset-0 block size-full object-cover object-top"
+                style={{ backgroundColor: SCREEN_BG }}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -152,6 +161,7 @@ export function Iphone({
                 src={displaySrc}
                 alt=""
                 className="absolute inset-0 block size-full object-cover object-top"
+                style={{ backgroundColor: SCREEN_BG }}
                 initial={{ opacity: prevSrc ? 0 : 1 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -233,7 +243,13 @@ export function Iphone({
 
         <defs>
           <mask id="screenPunch" maskUnits="userSpaceOnUse">
-            <rect x={0} y={0} width={PHONE_WIDTH} height={PHONE_HEIGHT} fill="white" />
+            <rect
+              x={0}
+              y={0}
+              width={PHONE_WIDTH}
+              height={PHONE_HEIGHT}
+              fill="white"
+            />
             <rect
               x={SCREEN_X}
               y={SCREEN_Y}
