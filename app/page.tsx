@@ -581,14 +581,10 @@ function PersonaScrollSection() {
 
           {/* Center: iPhone perfectly centered */}
           <div className="flex justify-center">
-            <motion.div
-              className="relative w-[320px] md:w-[434px]"
-              initial={false}
-              animate={{ y: isReady ? 0 : 10, opacity: 1 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <div className="relative w-[320px] md:w-[434px]">
+              {/* No key here – the device stays mounted, only the inner screen fades */}
               <Iphone src={iphoneSrc} />
-            </motion.div>
+            </div>
           </div>
 
           {/* Right: QR + download button (lg+ only) */}
