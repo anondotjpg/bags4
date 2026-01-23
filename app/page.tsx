@@ -581,16 +581,14 @@ function PersonaScrollSection() {
 
           {/* Center: iPhone perfectly centered */}
           <div className="flex justify-center">
-            <div className="relative w-[320px] md:w-[434px]">
-              <motion.div
-                key={iphoneSrc}
-                initial={{ opacity: 0, y: 8, scale: 0.99 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <Iphone src={iphoneSrc} />
-              </motion.div>
-            </div>
+            <motion.div
+              className="relative w-[320px] md:w-[434px]"
+              initial={false}
+              animate={{ y: isReady ? 0 : 10, opacity: 1 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Iphone src={iphoneSrc} />
+            </motion.div>
           </div>
 
           {/* Right: QR + download button (lg+ only) */}

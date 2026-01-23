@@ -46,15 +46,27 @@ export function Iphone({
   const hasVideo = !!videoSrc;
   const hasMedia = hasVideo || !!src;
 
-  // 🌈 Crossfade state: keep previous & current screenshot
+  // 🌈 Crossfade state: current and previous visible screenshots
   const [displaySrc, setDisplaySrc] = useState<string | undefined>(src);
   const [prevSrc, setPrevSrc] = useState<string | null>(null);
 
+  // When src changes, preload it first, then crossfade
   useEffect(() => {
-    if (!src || src === displaySrc) return;
-    // When src changes, keep old one as prev and fade it out
-    setPrevSrc(displaySrc ?? null);
-    setDisplaySrc(src);
+    if (!src || src === displaySrc || typeof window === "undefined") return;
+
+    let cancelled = false;
+
+    const img = new window.Image();
+    img.src = src;
+    img.onload = () => {
+      if (cancelled) return;
+      setPrevSrc(displaySrc ?? null);
+      setDisplaySrc(src);
+    };
+
+    return () => {
+      cancelled = true;
+    };
   }, [src, displaySrc]);
 
   return (
@@ -129,7 +141,7 @@ export function Iphone({
                 className="absolute inset-0 block size-full object-cover object-top"
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               />
             )}
 
@@ -142,7 +154,7 @@ export function Iphone({
                 className="absolute inset-0 block size-full object-cover object-top"
                 initial={{ opacity: prevSrc ? 0 : 1 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               />
             )}
           </div>
@@ -221,13 +233,7 @@ export function Iphone({
 
         <defs>
           <mask id="screenPunch" maskUnits="userSpaceOnUse">
-            <rect
-              x={0}
-              y={0}
-              width={PHONE_WIDTH}
-              height={PHONE_HEIGHT}
-              fill="white"
-            />
+            <rect x={0} y={0} width={PHONE_WIDTH} height={PHONE_HEIGHT} fill="white" />
             <rect
               x={SCREEN_X}
               y={SCREEN_Y}
