@@ -62,6 +62,7 @@ const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
 // rotating word in Bags Mobile card
+
 function RotatingWord() {
   const [index, setIndex] = useState(0);
 
@@ -73,9 +74,23 @@ function RotatingWord() {
     return () => clearInterval(interval);
   }, []);
 
-  return <span>{VARIABLE_WORDS[index]}</span>;
+  return (
+    <span className="inline-block">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-block"
+        >
+          {VARIABLE_WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
 }
-
 // Token data for floating cards
 const LEFT_TOKENS = [
   {
