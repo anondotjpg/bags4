@@ -45,7 +45,7 @@ export function Iphone({
 
   return (
     <div
-      className={`relative inline-block w-full align-middle leading-none z-30 ${className ?? ""}`}
+      className={`relative inline-block w-full align-middle leading-none z-50 lg:z-30 ${className ?? ""}`}
       style={{
         aspectRatio: `${PHONE_WIDTH}/${PHONE_HEIGHT}`,
         ...style,

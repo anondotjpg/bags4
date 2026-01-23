@@ -598,30 +598,6 @@ function PersonaScrollSection() {
               </div>
             </div>
           </motion.div>
-
-          {/* Small screens: keep always visible + clickable tabs */}
-          <div className="mt-8 block lg:hidden">
-            <PersonaCopy activeIndex={activeIndex} onTabSelect={onTabSelect} />
-
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <a href="https://apps.apple.com/us/app/bags-trade-crypto-memes/id6473196333">
-                <Image
-                  src="/bags-ios-qr.png"
-                  alt="Scan to download Bags on iOS"
-                  width={200}
-                  height={200}
-                  className="mx-auto w-[200px] rounded-xl border border-white/10"
-                />
-              </a>
-
-              <a
-                href="https://bags.fm/app-links"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black transition-colors duration-150 hover:bg-[#02FF40]/90"
-              >
-                download now
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
