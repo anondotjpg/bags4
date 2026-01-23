@@ -1,36 +1,39 @@
-import type { HTMLAttributes } from "react"
+"use client";
 
-const PHONE_WIDTH = 433
-const PHONE_HEIGHT = 882
-const SCREEN_X = 21.25
-const SCREEN_Y = 19.25
-const SCREEN_WIDTH = 389.5
-const SCREEN_HEIGHT = 843.5
-const SCREEN_RADIUS = 55.75
+import { useEffect, useState, type HTMLAttributes } from "react";
+import { motion } from "motion/react";
+
+const PHONE_WIDTH = 433;
+const PHONE_HEIGHT = 882;
+const SCREEN_X = 21.25;
+const SCREEN_Y = 19.25;
+const SCREEN_WIDTH = 389.5;
+const SCREEN_HEIGHT = 843.5;
+const SCREEN_RADIUS = 55.75;
 
 // Calculated percentages
-const LEFT_PCT = (SCREEN_X / PHONE_WIDTH) * 100
-const TOP_PCT = (SCREEN_Y / PHONE_HEIGHT) * 100
-const WIDTH_PCT = (SCREEN_WIDTH / PHONE_WIDTH) * 100
-const HEIGHT_PCT = (SCREEN_HEIGHT / PHONE_HEIGHT) * 100
-const RADIUS_H = (SCREEN_RADIUS / SCREEN_WIDTH) * 100
-const RADIUS_V = (SCREEN_RADIUS / SCREEN_HEIGHT) * 100
+const LEFT_PCT = (SCREEN_X / PHONE_WIDTH) * 100;
+const TOP_PCT = (SCREEN_Y / PHONE_HEIGHT) * 100;
+const WIDTH_PCT = (SCREEN_WIDTH / PHONE_WIDTH) * 100;
+const HEIGHT_PCT = (SCREEN_HEIGHT / PHONE_HEIGHT) * 100;
+const RADIUS_H = (SCREEN_RADIUS / SCREEN_WIDTH) * 100;
+const RADIUS_V = (SCREEN_RADIUS / SCREEN_HEIGHT) * 100;
 
 // Extra padding so backing slightly overlaps under edges
-const BACKING_PAD_PCT = 0.8 // tweak if needed
+const BACKING_PAD_PCT = 0.8; // tweak if needed
 
 // Dark mode palette to match your hero
-const SHELL_EDGE = "#050507"
-const SHELL_SIDE = "#0B0B0D"
-const SHELL_INNER = "#141414"
-const SHELL_ACCENT = "#1F1F23"
-const SCREEN_BORDER = "#202020"
-const SENSOR_BG = "#141414"
-const SENSOR_INNER = "#262626"
+const SHELL_EDGE = "#050507";
+const SHELL_SIDE = "#0B0B0D";
+const SHELL_INNER = "#141414";
+const SHELL_ACCENT = "#1F1F23";
+const SCREEN_BORDER = "#202020";
+const SENSOR_BG = "#141414";
+const SENSOR_INNER = "#262626";
 
 export interface IphoneProps extends HTMLAttributes<HTMLDivElement> {
-  src?: string
-  videoSrc?: string
+  src?: string;
+  videoSrc?: string;
 }
 
 export function Iphone({
@@ -40,12 +43,25 @@ export function Iphone({
   style,
   ...props
 }: IphoneProps) {
-  const hasVideo = !!videoSrc
-  const hasMedia = hasVideo || !!src
+  const hasVideo = !!videoSrc;
+  const hasMedia = hasVideo || !!src;
+
+  // 🌈 Crossfade state: keep previous & current screenshot
+  const [displaySrc, setDisplaySrc] = useState<string | undefined>(src);
+  const [prevSrc, setPrevSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!src || src === displaySrc) return;
+    // When src changes, keep old one as prev and fade it out
+    setPrevSrc(displaySrc ?? null);
+    setDisplaySrc(src);
+  }, [src, displaySrc]);
 
   return (
     <div
-      className={`relative inline-block w-full align-middle leading-none z-50 lg:z-30 ${className ?? ""}`}
+      className={`relative inline-block w-full align-middle leading-none z-50 lg:z-30 ${
+        className ?? ""
+      }`}
       style={{
         aspectRatio: `${PHONE_WIDTH}/${PHONE_HEIGHT}`,
         ...style,
@@ -67,6 +83,7 @@ export function Iphone({
         }}
       />
 
+      {/* 🎥 Video mode (no crossfade needed) */}
       {hasVideo && (
         <div
           className="pointer-events-none absolute z-10 overflow-hidden"
@@ -90,7 +107,8 @@ export function Iphone({
         </div>
       )}
 
-      {!hasVideo && src && (
+      {/* 🖼 Screenshot mode with ultra-smooth crossfade */}
+      {!hasVideo && (displaySrc || prevSrc) && (
         <div
           className="pointer-events-none absolute z-10 overflow-hidden"
           style={{
@@ -101,11 +119,33 @@ export function Iphone({
             borderRadius: `${RADIUS_H}% / ${RADIUS_V}%`,
           }}
         >
-          <img
-            src={src}
-            alt=""
-            className="block size-full object-cover object-top"
-          />
+          <div className="relative size-full">
+            {/* Previous screenshot fading OUT */}
+            {prevSrc && (
+              <motion.img
+                key={`prev-${prevSrc}`}
+                src={prevSrc}
+                alt=""
+                className="absolute inset-0 block size-full object-cover object-top"
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              />
+            )}
+
+            {/* Current screenshot fading IN */}
+            {displaySrc && (
+              <motion.img
+                key={`current-${displaySrc}`}
+                src={displaySrc}
+                alt=""
+                className="absolute inset-0 block size-full object-cover object-top"
+                initial={{ opacity: prevSrc ? 0 : 1 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              />
+            )}
+          </div>
         </div>
       )}
 
@@ -201,5 +241,5 @@ export function Iphone({
         </defs>
       </svg>
     </div>
-  )
+  );
 }

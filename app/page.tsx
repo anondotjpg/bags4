@@ -399,6 +399,23 @@ const ROLE_SECTIONS = [
   },
 ] as const;
 
+// 🔁 Mapping: create → new.png, trade → trade.png, connect → ref.png
+const ROLE_IPHONE_SRCS = ["/new.png", "/trade.png", "/ref.png"] as const;
+const DEFAULT_IPHONE_SRC = "/flex3.png";
+
+const IPHONE_IMAGE_SRCS = [DEFAULT_IPHONE_SRC, ...ROLE_IPHONE_SRCS];
+
+function usePreloadImages(srcs: string[]) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    srcs.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, [srcs]);
+}
+
 function PersonaCopy({
   activeIndex,
   onTabSelect,
@@ -468,12 +485,10 @@ function PersonaCopy({
 // Scroll-driven persona section (no floating cards, no floor.webp here)
 // ---------------------------------------------------------------------------
 
-// --- replace your PersonaScrollSection() with this version ---
-// (everything else in the file can stay exactly the same)
-
 function PersonaScrollSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isReady, setIsReady] = useState(false);
+  const [iphoneSrc, setIphoneSrc] = useState<string>(DEFAULT_IPHONE_SRC);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
@@ -525,6 +540,16 @@ function PersonaScrollSection() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  // 🔄 Decide which screenshot the iPhone should show
+  useEffect(() => {
+    const targetSrc =
+      isReady && ROLE_IPHONE_SRCS[activeIndex]
+        ? ROLE_IPHONE_SRCS[activeIndex]
+        : DEFAULT_IPHONE_SRC;
+
+    setIphoneSrc(targetSrc);
+  }, [isReady, activeIndex]);
+
   const onTabSelect = (index: number) => {
     setActiveIndex(index);
     manualLockUntilRef.current = Date.now() + 1200; // lock scroll updates briefly
@@ -557,7 +582,14 @@ function PersonaScrollSection() {
           {/* Center: iPhone perfectly centered */}
           <div className="flex justify-center">
             <div className="relative w-[320px] md:w-[434px]">
-              <Iphone src="flex3.png" />
+              <motion.div
+                key={iphoneSrc}
+                initial={{ opacity: 0, y: 8, scale: 0.99 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Iphone src={iphoneSrc} />
+              </motion.div>
             </div>
           </div>
 
@@ -611,6 +643,9 @@ function PersonaScrollSection() {
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
   const earningsValueRef = useRef<number>(EARNINGS_START);
+
+  // 🔥 Preload all iPhone screenshots so swaps are instant
+  usePreloadImages(IPHONE_IMAGE_SRCS);
 
   useEffect(() => {
     const node = earningsSpanRef.current;
@@ -777,7 +812,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SCROLL-DRIVEN PERSONA + IPHONE SECTION (no floor, no floats) */}
+      {/* SCROLL-DRIVEN PERSONA + IPHONE SECTION */}
       <PersonaScrollSection />
 
       {/* BOTTOM SECTION – marquee + Bags Mobile card with floor.webp at very bottom */}
@@ -794,8 +829,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-[#0d0d0f]/75" />
           <div className="absolute inset-0 bg-linear-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
         </div>
-
-        {/* removed extra “you are clicks away” text */}
 
         <div className="relative z-30 mt-4 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
           <Marquee3D />
