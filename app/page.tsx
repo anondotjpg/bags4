@@ -19,7 +19,6 @@ import { MagicCard } from "./components/MagicCard";
 import DitherShader from "./components/dither-shader";
 import { Marqueee } from "./components/Marq";
 
-// ElevenLabs Matrix + presets (your local implementation using useId)
 import { Matrix, digits, wave } from "./components/Matrix";
 
 const shinyAnimationProps: MotionProps = {
@@ -45,7 +44,6 @@ const shinyAnimationProps: MotionProps = {
 
 const EARNINGS_START = 21_000_000;
 
-// Helper function to format holder counts (e.g., 3876 → "3.88k")
 const formatHolderCount = (count: string): string => {
   const num = parseInt(count.replace(/,/g, ""), 10);
   if (isNaN(num)) return count;
@@ -57,11 +55,8 @@ const formatHolderCount = (count: string): string => {
 
 const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 
-// 🔢 Daily flex number (only shown via Matrix digits)
 const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
-
-// rotating word in Bags Mobile card
 
 function RotatingWord() {
   const [index, setIndex] = useState(0);
@@ -75,23 +70,26 @@ function RotatingWord() {
   }, []);
 
   return (
-    <span className="inline-block">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-block"
-        >
-          {VARIABLE_WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
+    <span className="relative inline-block align-bottom">
+      <span className="invisible whitespace-pre">anything</span>
+      <span className="absolute left-0 top-0">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: 3 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -3 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-block"
+          >
+            {VARIABLE_WORDS[index]}
+          </motion.span>
+        </AnimatePresence>
+      </span>
     </span>
   );
 }
-// Token data for floating cards
+
 const LEFT_TOKENS = [
   {
     id: 1,
@@ -156,7 +154,7 @@ const reviews = [
   {
     name: "Finn",
     username: "@finnbags",
-    body: "We’re funding the future. We're also about to give cracked @jukezpilled a job.",
+    body: "We're funding the future. We're also about to give cracked @jukezpilled a job.",
     img: "finn.jpg",
   },
 ];
@@ -257,7 +255,6 @@ export function Marquee3D() {
   );
 }
 
-// Static Floating Token Card Component (used only in hero)
 const FloatingTokenCard = ({
   token,
   className,
@@ -383,10 +380,6 @@ const AVATAR_URLS = MARQUEE_TOKENS.map((token) => ({
   profileUrl: `https://twitter.com/${token.feeEarnerUsername}`,
 }));
 
-// ---------------------------------------------------------------------------
-// Persona data (creator / trader / connector)
-// ---------------------------------------------------------------------------
-
 const ROLE_SECTIONS = [
   {
     key: "creator",
@@ -414,7 +407,6 @@ const ROLE_SECTIONS = [
   },
 ] as const;
 
-// 🔁 Mapping: create → new.png, trade → trade.png, connect → ref.png
 const ROLE_IPHONE_SRCS = ["/new.png", "/trade.png", "/ref.png"] as const;
 const DEFAULT_IPHONE_SRC = "/flex3.png";
 
@@ -440,7 +432,6 @@ function PersonaCopy({
 }) {
   return (
     <div className="flex w-full max-w-sm flex-col text-left">
-      {/* Tabs (fixed widths so nothing jiggles) */}
       <div
         className="inline-flex w-full items-center rounded-full bg-white/5 p-1 text-[14px] font-medium text-neutral-400"
         role="tablist"
@@ -469,7 +460,6 @@ function PersonaCopy({
         })}
       </div>
 
-      {/* Fixed-height stage so copy NEVER shifts (content crossfades, layout stays) */}
       <div className="relative mt-4 min-h-[190px]">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -496,10 +486,6 @@ function PersonaCopy({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Scroll-driven persona section (no floating cards, no floor.webp here)
-// ---------------------------------------------------------------------------
-
 function PersonaScrollSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -508,7 +494,6 @@ function PersonaScrollSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
 
-  // manual override lock (so scroll doesn't instantly overwrite clicks)
   const manualLockUntilRef = useRef<number>(0);
 
   const { scrollYProgress } = useScroll({
@@ -516,12 +501,11 @@ function PersonaScrollSection() {
     offset: ["start start", "end end"],
   });
 
-  // Scroll drives activeIndex unless user clicked recently
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (value) => {
       if (Date.now() < manualLockUntilRef.current) return;
 
-      const segments = ROLE_SECTIONS.length; // 3
+      const segments = ROLE_SECTIONS.length;
       const idx = Math.min(
         segments - 1,
         Math.floor(Math.max(0, Math.min(0.999999, value)) * segments),
@@ -532,7 +516,6 @@ function PersonaScrollSection() {
     return () => unsubscribe();
   }, [scrollYProgress]);
 
-  // Detect "ready" (sticky container centered in viewport) -> fade side panels
   useEffect(() => {
     const el = stickyRef.current;
     if (!el) return;
@@ -545,7 +528,6 @@ function PersonaScrollSection() {
       const viewportCenter = window.innerHeight / 2;
       const dist = Math.abs(centerY - viewportCenter);
 
-      // within 70px of perfect center = ready
       setIsReady(dist < 70);
 
       raf = requestAnimationFrame(tick);
@@ -555,7 +537,6 @@ function PersonaScrollSection() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // 🔄 Decide which screenshot the iPhone should show
   useEffect(() => {
     const targetSrc =
       isReady && ROLE_IPHONE_SRCS[activeIndex]
@@ -567,7 +548,7 @@ function PersonaScrollSection() {
 
   const onTabSelect = (index: number) => {
     setActiveIndex(index);
-    manualLockUntilRef.current = Date.now() + 1200; // lock scroll updates briefly
+    manualLockUntilRef.current = Date.now() + 1200;
   };
 
   return (
@@ -577,7 +558,6 @@ function PersonaScrollSection() {
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-20"
       >
         <div className="relative z-10 grid w-full max-w-5xl grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-          {/* Left: persona copy (lg+ only) */}
           <motion.div
             className="hidden justify-end lg:flex"
             initial={false}
@@ -594,15 +574,12 @@ function PersonaScrollSection() {
             </div>
           </motion.div>
 
-          {/* Center: iPhone perfectly centered */}
           <div className="flex justify-center">
             <div className="relative w-[320px] md:w-[434px]">
-              {/* No key here – the device stays mounted, only the inner screen fades */}
               <Iphone src={iphoneSrc} />
             </div>
           </div>
 
-          {/* Right: QR + download button (lg+ only) */}
           <motion.div
             className="hidden lg:flex justify-start"
             initial={false}
@@ -629,7 +606,6 @@ function PersonaScrollSection() {
                     priority={false}
                   />
                 </a>
-
                 <a
                   href="https://bags.fm/app-links"
                   className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
@@ -645,15 +621,10 @@ function PersonaScrollSection() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// MAIN PAGE
-// ---------------------------------------------------------------------------
-
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
   const earningsValueRef = useRef<number>(EARNINGS_START);
 
-  // 🔥 Preload all iPhone screenshots so swaps are instant
   usePreloadImages(IPHONE_IMAGE_SRCS);
 
   useEffect(() => {
@@ -673,7 +644,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#0d0d0f] text-white">
-      {/* HEADER */}
       <header className="border-b-2 border-white/5 bg-[#0d0d0f]">
         <div className="mx-auto flex max-w-6xl items-center gap-5 px-5 py-4 md:px-7">
           <div className="flex items-center">
@@ -724,9 +694,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* HERO */}
       <section className="relative flex items-center justify-center overflow-hidden px-6 py-44">
-        {/* HERO dotted map background – zoomed */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           <div className="absolute left-1/2 top-[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
             <DottedMap />
@@ -735,7 +703,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/60 to-[#0d0d0f]" />
         </div>
 
-        {/* LEFT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={LEFT_TOKENS[0]}
           className="hidden xl:block top-[8%] left-[calc(50%-480px)] -rotate-6"
@@ -752,7 +719,6 @@ export default function Home() {
           animationDelay={0.4}
         />
 
-        {/* RIGHT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={RIGHT_TOKENS[0]}
           className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
@@ -821,79 +787,58 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SCROLL-DRIVEN PERSONA + IPHONE SECTION */}
       <PersonaScrollSection />
 
-      {/* BOTTOM SECTION – marquee + Bags Mobile card with floor.webp at very bottom */}
       <section className="relative flex flex-col items-center overflow-hidden px-6 pb-16 pt-24">
-        {/* floor.webp way at bottom */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-56 md:h-72">
-          <DitherShader
-            src="floor.webp"
-            gridSize={3}
-            ditherMode="bayer"
-            colorMode="grayscale"
-            className="h-full w-full"
-          />
-          <div className="absolute inset-0 bg-[#0d0d0f]/75" />
-          <div className="absolute inset-0 bg-linear-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
-        </div>
-
         <div className="relative z-30 mt-4 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
           <Marquee3D />
         </div>
 
         <div className="relative z-30 mt-10 w-full max-w-5xl">
-          <MagicCard className="mx-auto w-full">
-            <div className="flex w-full flex-col items-center justify-between gap-2 px-6 py-4 md:flex-row md:items-start md:gap-10 md:px-10 md:py-7 md:pb-8">
-              <div className="flex w-full items-center gap-4 md:flex-1 md:items-start md:gap-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black/90 md:h-16 md:w-16">
-                  <Image
-                    src="/b.png"
-                    alt="Bags Mobile icon"
-                    width={48}
-                    height={48}
-                    className="h-10 w-10 md:h-11 md:w-11"
-                  />
-                </div>
-
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-white md:text-lg">
-                    Bags Mobile
-                  </p>
-                  <p className="text-xs text-neutral-300 md:hidden">
-                    Get funded for your future
-                  </p>
-                  <p className="hidden text-xs text-neutral-300 md:block md:text-sm lg:text-base">
-                    Get funded for your <RotatingWord />
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-neutral-500 md:text-xs">
-                    Available on iOS and Android
-                  </p>
-                </div>
+          <MagicCard className="mx-auto w-full overflow-hidden">
+            <div className="relative flex w-full flex-col items-center">
+              {/* Dithered floor as full background */}
+              <div className="absolute inset-0 z-0">
+                <DitherShader
+                  src="floor.webp"
+                  gridSize={3}
+                  ditherMode="bayer"
+                  colorMode="grayscale"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/90" />
               </div>
 
-              <div className="flex w-full justify-center md:w-auto md:justify-end">
-                <a
-                  href="https://apps.apple.com/us/app/bags-trade-crypto-memes/id6473196333"
-                  className="hidden lg:block"
+              {/* Content */}
+              <div className="relative z-10 flex w-full flex-col items-center px-6 py-10 md:px-10">
+                <Image
+                  src="/b.png"
+                  alt="Bags Mobile icon"
+                  width={56}
+                  height={56}
+                  className="h-14 w-14"
+                />
+
+                <motion.p
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="mt-4 w-full text-[clamp(3rem,12vw,7rem)] font-black tracking-tighter text-[#02FF40] text-center leading-[0.85] drop-shadow-[0_0_40px_rgba(2,255,64,0.7)]"
                 >
-                  <Image
-                    src="/bags-ios-qr.png"
-                    alt="Scan to download Bags on iOS"
-                    width={120}
-                    height={120}
-                    className="rounded-md border border-white/10"
-                  />
+                  GET BAGGED.
+                </motion.p>
+
+                <p className="mt-1 text-sm text-neutral-100 text-center md:text-base">
+                  Get funded for your&nbsp;<RotatingWord />
+                </p>
+                <a
+                  href="https://bags.fm/app-links"
+                  className="mt-4 inline-flex shrink-0 items-center justify-center rounded-full bg-[#02FF40]/100 px-8 py-3 text-sm font-semibold text-black shadow-[0_0_20px_rgba(0,255,90,0.1)] transition-all duration-150 hover:bg-[#02FF40]/90 hover:shadow-[0_0_25px_rgba(0,255,90,0.15)] md:text-base"
+                >
+                  download now
                 </a>
               </div>
-
-              <a
-                href="https://bags.fm/app-links"
-                className="mt-1 inline-flex shrink-0 items-center justify-center rounded-full bg-[#02FF40]/100 px-7 py-2.5 text-sm font-semibold text-black shadow-[0_0_25px_rgba(0,255,90,0.1)] transition-colors duration-150 hover:bg-[#02FF40]/90 lg:absolute lg:bottom-5 lg:left-6 lg:mt-0"
-              >
-                download now
-              </a>
             </div>
           </MagicCard>
         </div>
