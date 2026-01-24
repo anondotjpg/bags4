@@ -571,7 +571,7 @@ function PersonaScrollSection() {
   };
 
   return (
-    <section ref={sectionRef} className="relative h-[320vh] -mt-40">
+    <section ref={sectionRef} className="relative h-[320vh] -mt-40 hidden md:block">
       <div
         ref={stickyRef}
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-20"
