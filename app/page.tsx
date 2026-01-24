@@ -792,7 +792,7 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[64px]">
+          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[72px]">
             Get funding
             <br />
             for your ideas
