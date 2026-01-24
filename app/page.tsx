@@ -792,10 +792,10 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[72px]">
-            We&apos;re funding
+          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[64px]">
+            Get funding
             <br />
-            your ideas
+            for your ideas
           </h1>
 
           <p className="mt-6 text-base text-neutral-400 md:text-lg">
