@@ -823,7 +823,7 @@ export default function Home() {
             download now
           </a>
 
-          <p className="mt-2 text-[11px] text-neutral-300 md:text-xs">
+          <p className="mt-2 text-[11px] text-neutral-400 md:text-xs">
             Available on iOS and Android
           </p>
         </div>
