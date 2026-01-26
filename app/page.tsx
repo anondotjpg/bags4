@@ -15,10 +15,8 @@ import { DottedMap } from "./components/DottedMap";
 import { Iphone } from "./components/Iphone";
 
 import { useEffect, useRef, useState } from "react";
-import { MagicCard } from "./components/MagicCard";
 import DitherShader from "./components/dither-shader";
 import { Marqueee } from "./components/Marq";
-
 import { Matrix, digits, wave } from "./components/Matrix";
 
 const shinyAnimationProps: MotionProps = {
@@ -58,37 +56,7 @@ const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
-function RotatingWord() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length),
-      2200,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <span className="relative inline-block align-bottom">
-      <span className="invisible whitespace-pre">anything</span>
-      <span className="absolute left-0 top-0">
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={index}
-            initial={{ opacity: 0, y: 3 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -3 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block"
-          >
-            {VARIABLE_WORDS[index]}
-          </motion.span>
-        </AnimatePresence>
-      </span>
-    </span>
-  );
-}
+function RotatingWord() { const [index, setIndex] = useState(0); useEffect(() => { const interval = setInterval( () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length), 2200, ); return () => clearInterval(interval); }, []); return ( <span className="relative inline-block align-bottom"> <span className="invisible whitespace-pre">anything</span> <span className="absolute left-0 top-0"> <AnimatePresence mode="wait"> <motion.span key={index} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }} transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }} className="inline-block" > {VARIABLE_WORDS[index]} </motion.span> </AnimatePresence> </span> </span> ); }
 
 const LEFT_TOKENS = [
   {
@@ -451,7 +419,7 @@ function PersonaCopy({
                 "flex-1 rounded-full px-3 py-1.5 text-center transition-colors duration-200",
                 isActive
                   ? "bg-white text-black shadow-[0_0_0_1px_rgba(0,0,0,0.85)]"
-                  : "hover:text-white/80",
+                  : "hover:text:white/80",
               )}
             >
               {r.label}
@@ -552,7 +520,10 @@ function PersonaScrollSection() {
   };
 
   return (
-    <section ref={sectionRef} className="relative h-[320vh] -mt-40 hidden md:block">
+    <section
+      ref={sectionRef}
+      className="relative h-[320vh] -mt-40 hidden md:block"
+    >
       <div
         ref={stickyRef}
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-6 pb-16 pt-20"
@@ -608,7 +579,7 @@ function PersonaScrollSection() {
                 </a>
                 <a
                   href="https://bags.fm/app-links"
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text:black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
                 >
                   download now
                 </a>
@@ -686,7 +657,7 @@ export default function Home() {
             </a>
             <a
               href="https://bags.fm/login"
-              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg-white/90"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg:white/90"
             >
               <span>log in</span>
             </a>
@@ -696,7 +667,7 @@ export default function Home() {
 
       <section className="relative flex items-center justify-center overflow-hidden px-6 py-44">
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute left-1/2 top-[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top:[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
             <DottedMap />
           </div>
           <div className="absolute inset-0 bg-[#0d0d0f]/70" />
@@ -715,23 +686,23 @@ export default function Home() {
         />
         <FloatingTokenCard
           token={LEFT_TOKENS[2]}
-          className="hidden xl:block top-[68%] left-[calc(50%-460px)] -rotate-3"
+          className="hidden xl:block top-[68%] left:[calc(50%-460px)] -rotate-3"
           animationDelay={0.4}
         />
 
         <FloatingTokenCard
           token={RIGHT_TOKENS[0]}
-          className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
+          className="hidden xl:block top-[5%] left:[calc(50%+300px)] rotate-6"
           animationDelay={0.15}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[1]}
-          className="hidden xl:block top-[35%] left-[calc(50%+340px)] -rotate-3"
+          className="hidden xl:block top-[35%] left:[calc(50%+340px)] -rotate-3"
           animationDelay={0.3}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[2]}
-          className="hidden xl:block top-[65%] left-[calc(50%+280px)] rotate-3"
+          className="hidden xl:block top:[65%] left:[calc(50%+280px)] rotate-3"
           animationDelay={0.45}
         />
 
@@ -789,58 +760,56 @@ export default function Home() {
 
       <PersonaScrollSection />
 
-      <section className="relative flex flex-col items-center overflow-hidden px-6 pb-16 pt-24">
-        <div className="relative z-30 mt-4 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
+      {/* FOOTER / DOWNLOAD SECTION WITH FULL-WIDTH FLOOR */}
+      <section className="relative flex flex-col items-center overflow-hidden px-6 pb-24 pt-24">
+        {/* floor.webp full-width at the bottom with fade out */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-56 md:h-72">
+          <DitherShader
+            src="floor.webp"
+            gridSize={3}
+            ditherMode="bayer"
+            colorMode="grayscale"
+            className="h-full w-full"
+          />
+          {/* darken a bit to match page */}
+          <div className="absolute inset-0 bg-[#0d0d0f]/75" />
+          {/* fade floor upward into page background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
+        </div>
+
+        {/* Marquee above floor */}
+        <div className="relative z-10 mt-4 mb-8 hidden w-full max-w-5xl justify-center lg:flex">
           <Marquee3D />
         </div>
 
-        <div className="relative z-30 mt-10 w-full max-w-5xl">
-          <MagicCard className="mx-auto w-full overflow-hidden">
-            <div className="relative flex w-full flex-col items-center">
-              {/* Dithered floor as full background */}
-              <div className="absolute inset-0 z-0">
-                <DitherShader
-                  src="floor.webp"
-                  gridSize={3}
-                  ditherMode="bayer"
-                  colorMode="grayscale"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/90" />
-              </div>
+        {/* GET BAGGED download content – no MagicCard, just centered over floor */}
+        <div className="relative z-10 mt-10 w-full max-w-5xl flex flex-col items-center text-center">
+          <Image
+            src="/b.png"
+            alt="Bags Mobile icon"
+            width={56}
+            height={56}
+            className="h-14 w-14"
+          />
 
-              {/* Content */}
-              <div className="relative z-10 flex w-full flex-col items-center px-6 py-10 md:px-10">
-                <Image
-                  src="/b.png"
-                  alt="Bags Mobile icon"
-                  width={56}
-                  height={56}
-                  className="h-14 w-14"
-                />
+          <p className="mt-5 text-[clamp(3rem,12vw,5rem)] font-black tracking-tighter text-[#02FF40] leading-[0.9] drop-shadow-[0_0_40px_rgba(2,255,64,0.7)]">
+            GET BAGGED.
+          </p>
 
-                <motion.p
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-4 w-full text-[clamp(3rem,12vw,7rem)] font-black tracking-tighter text-[#02FF40] text-center leading-[0.85] drop-shadow-[0_0_40px_rgba(2,255,64,0.7)]"
-                >
-                  GET BAGGED.
-                </motion.p>
+          <p className="mt-3 text-sm text-neutral-100 md:text-base">
+            Get funded for your <RotatingWord />
+          </p>
 
-                <p className="mt-1 text-sm text-neutral-100 text-center md:text-base">
-                  Get funded for your&nbsp;<RotatingWord />
-                </p>
-                <a
-                  href="https://bags.fm/app-links"
-                  className="mt-4 inline-flex shrink-0 items-center justify-center rounded-full bg-[#02FF40]/100 px-8 py-3 text-sm font-semibold text-black shadow-[0_0_20px_rgba(0,255,90,0.1)] transition-all duration-150 hover:bg-[#02FF40]/90 hover:shadow-[0_0_25px_rgba(0,255,90,0.15)] md:text-base"
-                >
-                  download now
-                </a>
-              </div>
-            </div>
-          </MagicCard>
+          <a
+            href="https://bags.fm/app-links"
+            className="mt-5 inline-flex shrink-0 items-center justify-center rounded-full bg-[#02FF40]/100 px-8 py-3 text-sm font-semibold text-black shadow-[0_0_20px_rgba(0,255,90,0.1)] transition-all duration-150 hover:bg-[#02FF40]/90 hover:shadow-[0_0_25px_rgba(0,255,90,0.15)] md:text-base"
+          >
+            download now
+          </a>
+
+          <p className="mt-2 text-[11px] text-neutral-300 md:text-xs">
+            Available on iOS and Android
+          </p>
         </div>
       </section>
     </main>
