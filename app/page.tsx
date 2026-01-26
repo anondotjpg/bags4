@@ -56,7 +56,41 @@ const VARIABLE_WORDS = ["project", "business", "app", "cause", "anything"];
 const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
-function RotatingWord() { const [index, setIndex] = useState(0); useEffect(() => { const interval = setInterval( () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length), 2200, ); return () => clearInterval(interval); }, []); return ( <span className="relative inline-block align-bottom"> <span className="invisible whitespace-pre">anything</span> <span className="absolute left-0 top-0"> <AnimatePresence mode="wait"> <motion.span key={index} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }} transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }} className="inline-block" > {VARIABLE_WORDS[index]} </motion.span> </AnimatePresence> </span> </span> ); }
+// Rotating word with no layout jumps
+function RotatingWord() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length),
+      2200,
+    );
+    return () => clearInterval(interval);
+  }, []);
+
+  const longest = "anything";
+
+  return (
+    <span className="inline-grid align-baseline">
+      <span className="invisible col-start-1 row-start-1 whitespace-pre">
+        {longest}
+      </span>
+
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={index}
+          className="col-start-1 row-start-1"
+          initial={{ opacity: 0, y: 3 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -3 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {VARIABLE_WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
 
 const LEFT_TOKENS = [
   {
@@ -419,7 +453,7 @@ function PersonaCopy({
                 "flex-1 rounded-full px-3 py-1.5 text-center transition-colors duration-200",
                 isActive
                   ? "bg-white text-black shadow-[0_0_0_1px_rgba(0,0,0,0.85)]"
-                  : "hover:text:white/80",
+                  : "hover:text-white/80",
               )}
             >
               {r.label}
@@ -579,7 +613,7 @@ function PersonaScrollSection() {
                 </a>
                 <a
                   href="https://bags.fm/app-links"
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text:black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#02FF40]/100 px-6 py-3 text-sm font-semibold text-black shadow-[0_0_25px_rgba(0,255,90,0.10)] transition-colors duration-150 hover:bg-[#02FF40]/90"
                 >
                   download now
                 </a>
@@ -591,6 +625,10 @@ function PersonaScrollSection() {
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// MAIN
+// ---------------------------------------------------------------------------
 
 export default function Home() {
   const earningsSpanRef = useRef<HTMLSpanElement | null>(null);
@@ -615,6 +653,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#0d0d0f] text-white">
+      {/* HEADER */}
       <header className="border-b-2 border-white/5 bg-[#0d0d0f]">
         <div className="mx-auto flex max-w-6xl items-center gap-5 px-5 py-4 md:px-7">
           <div className="flex items-center">
@@ -657,7 +696,7 @@ export default function Home() {
             </a>
             <a
               href="https://bags.fm/login"
-              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg:white/90"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-white/100 px-7 py-2.5 text-sm font-bold text-black transition-colors duration-150 hover:bg-white/90"
             >
               <span>log in</span>
             </a>
@@ -665,15 +704,18 @@ export default function Home() {
         </div>
       </header>
 
+      {/* HERO (restored original) */}
       <section className="relative flex items-center justify-center overflow-hidden px-6 py-44">
+        {/* HERO dotted map background – zoomed */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute left-1/2 top:[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
             <DottedMap />
           </div>
           <div className="absolute inset-0 bg-[#0d0d0f]/70" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/60 to-[#0d0d0f]" />
         </div>
 
+        {/* LEFT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={LEFT_TOKENS[0]}
           className="hidden xl:block top-[8%] left-[calc(50%-480px)] -rotate-6"
@@ -686,23 +728,24 @@ export default function Home() {
         />
         <FloatingTokenCard
           token={LEFT_TOKENS[2]}
-          className="hidden xl:block top-[68%] left:[calc(50%-460px)] -rotate-3"
+          className="hidden xl:block top-[68%] left-[calc(50%-460px)] -rotate-3"
           animationDelay={0.4}
         />
 
+        {/* RIGHT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={RIGHT_TOKENS[0]}
-          className="hidden xl:block top-[5%] left:[calc(50%+300px)] rotate-6"
+          className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
           animationDelay={0.15}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[1]}
-          className="hidden xl:block top-[35%] left:[calc(50%+340px)] -rotate-3"
+          className="hidden xl:block top-[35%] left-[calc(50%+340px)] -rotate-3"
           animationDelay={0.3}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[2]}
-          className="hidden xl:block top:[65%] left:[calc(50%+280px)] rotate-3"
+          className="hidden xl:block top-[65%] left-[calc(50%+280px)] rotate-3"
           animationDelay={0.45}
         />
 
@@ -729,10 +772,10 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[84px]">
-            Get funding
+          <h1 className="text-4xl font-semibold leading-[0.9] tracking-tight text-white md:text-[72px]">
+            We&apos;re funding
             <br />
-            for your ideas
+            your ideas
           </h1>
 
           <p className="mt-6 text-base text-neutral-400 md:text-lg">
@@ -758,6 +801,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SCROLL-DRIVEN PERSONA + IPHONE SECTION */}
       <PersonaScrollSection />
 
       {/* FOOTER / DOWNLOAD SECTION WITH FULL-WIDTH FLOOR */}
@@ -771,9 +815,8 @@ export default function Home() {
             colorMode="grayscale"
             className="h-full w-full"
           />
-          {/* darken a bit to match page */}
           <div className="absolute inset-0 bg-[#0d0d0f]/75" />
-          {/* fade floor upward into page background */}
+          {/* fade up into page background */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0d0d0f] via-[#0d0d0f]/60 to-transparent" />
         </div>
 
@@ -782,7 +825,7 @@ export default function Home() {
           <Marquee3D />
         </div>
 
-        {/* GET BAGGED download content – no MagicCard, just centered over floor */}
+        {/* GET BAGGED download content */}
         <div className="relative z-10 mt-10 w-full max-w-5xl flex flex-col items-center text-center">
           <Image
             src="/b.png"
