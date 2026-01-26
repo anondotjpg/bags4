@@ -806,7 +806,13 @@ export default function Home() {
             GET BAGGED.
           </p>
 
-          <p className="mt-3 text-sm text-neutral-100 md:text-base">
+          {/* mobile + md: static copy */}
+          <p className="mt-3 text-sm text-neutral-100 md:text-base lg:hidden">
+            Get funded for anything.
+          </p>
+
+          {/* lg+ only: rotating word */}
+          <p className="mt-3 hidden text-sm text-neutral-100 md:text-base lg:block">
             Get funded for your <RotatingWord />
           </p>
 
