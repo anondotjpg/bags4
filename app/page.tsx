@@ -57,40 +57,7 @@ const FUNDED_TODAY = 1284;
 const FUNDED_TODAY_DIGITS = FUNDED_TODAY.toString().split("");
 
 // Rotating word with no layout jumps
-function RotatingWord() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length),
-      2200,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
-  const longest = "anything";
-
-  return (
-    <span className="inline-grid align-baseline">
-      <span className="invisible col-start-1 row-start-1 whitespace-pre">
-        {longest}
-      </span>
-
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          className="col-start-1 row-start-1"
-          initial={{ opacity: 0, y: 3 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -3 }}
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {VARIABLE_WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-}
+function RotatingWord() { const [index, setIndex] = useState(0); useEffect(() => { const interval = setInterval( () => setIndex((prev) => (prev + 1) % VARIABLE_WORDS.length), 2200, ); return () => clearInterval(interval); }, []); return ( <span className="relative inline-block align-bottom"> <span className="invisible whitespace-pre">anything</span> <span className="absolute left-0 top-0"> <AnimatePresence mode="wait"> <motion.span key={index} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }} transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }} className="inline-block" > {VARIABLE_WORDS[index]} </motion.span> </AnimatePresence> </span> </span> ); }
 
 const LEFT_TOKENS = [
   {
