@@ -675,7 +675,7 @@ export default function Home() {
       <section className="relative flex items-center justify-center overflow-hidden px-6 py-44">
         {/* HERO dotted map background – zoomed */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute left-1/2 top-[45%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-[80%] sm:top-[40%] h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2">
             <DottedMap />
           </div>
           <div className="absolute inset-0 bg-[#0d0d0f]/70" />
