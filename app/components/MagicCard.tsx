@@ -69,7 +69,7 @@ export function MagicCard({
     <div
       className={cn(
         // this element is the card shell
-        "group relative overflow-hidden rounded-[28px] border border-white/5 bg-[#0c0c0f]",
+        "group relative overflow-hidden rounded-lg md:rounded-[28px] border border-white/5 bg-[#0c0c0f]",
         className
       )}
       onPointerMove={handlePointerMove}
