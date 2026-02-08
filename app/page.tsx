@@ -702,17 +702,17 @@ export default function Home() {
         {/* RIGHT FLOATING CARDS - positioned relative to center (HERO ONLY) */}
         <FloatingTokenCard
           token={RIGHT_TOKENS[0]}
-          className="hidden xl:block top-[5%] left-[calc(50%+300px)] rotate-6"
+          className="hidden xl:block top-[8%] left-[calc(50%+300px)] rotate-6"
           animationDelay={0.15}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[1]}
-          className="hidden xl:block top-[35%] left-[calc(50%+340px)] -rotate-3"
+          className="hidden xl:block top-[38%] left-[calc(50%+340px)] -rotate-3"
           animationDelay={0.3}
         />
         <FloatingTokenCard
           token={RIGHT_TOKENS[2]}
-          className="hidden xl:block top-[65%] left-[calc(50%+280px)] rotate-3"
+          className="hidden xl:block top-[68%] left-[calc(50%+280px)] rotate-3"
           animationDelay={0.45}
         />
 
