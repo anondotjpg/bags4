@@ -248,7 +248,7 @@ const FloatingTokenCard = ({
       ease: [0.23, 1, 0.32, 1],
     }}
     className={cn(
-      "absolute w-[180px] rounded-2xl bg-[#141414] border border-white/[0.08] p-5 shadow-2xl shadow-black/60",
+      "absolute w-[180px] rounded-2xl bg-[#141414] border border-white/[0.08] p-5",
       "hover:border-white/15 hover:bg-[#0e0e10] transition-all duration-300",
       className,
     )}
